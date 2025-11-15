@@ -1,0 +1,68 @@
+@font-face {
+    font-family: Bytebounce;
+    src: url(/bytebounce/ByteBounce.ttf);
+}
+
+html {
+    color: #F7A5A5;
+    font-family:'Bytebounce';
+}
+
+
+body {
+    text-align: center;
+    background-color: #1A2A4F;
+    
+}
+
+.container{
+    display: grid;
+    grid-template-areas:
+    "header header"
+    "menu content"
+    "footer footer";
+  background-color: #1A2A4F;
+  border-radius: 20px;
+  box-shadow: 5px, 5px, 5px, #FFDBB6;
+  padding: 10px;
+}
+
+.container div{
+
+}
+
+button {
+    font-family: 'Bytebounce';
+    font-size: xx-large;
+    background-color: #1A2A4F;
+    color: #F7A5A5;
+    border-radius: 5px;
+    border: 5px, solid, #FFDBB6;
+    box-shadow: 0, 3px, 3px, 0, black;
+}
+
+.button-class{
+background-color: #1A2A4F;
+border: none;
+color: #F7A5A5;
+font-family: "Bytebounce";
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+cursor: pointer;
+border-radius: 4px;
+
+
+}
+
+input[type="text"] {
+    background-color: #1A2A4F;
+    font-family: 'Bytebounce';
+    color:#F7A5A5;
+}
+
+input[type="text"]::placeholder {
+    color:#FFDBB6;
+}
