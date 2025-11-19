@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+</head>
+<body>
+<h1>Music Party</h1>
+
+<h2> Welcome To The Lobby!</h2>
+<h1>NAME:</h1>
+<h2 id="playername"></h2>
+
+
+<p>customize your photo!</p>
+<div class="flex-container-column" id="player-display">
+
+
+  
+
+</div>
+<form>
+    <input type="file" id="pfp" name="pfpname" accept="image/*">
+</form>
+<img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
+<br>
+
+<p>Or, Draw Your Picture!</p>
+
+<button>DRAW!</button>
+
+<div class="easle">
+  <canvas id="canvas"></canvas>
+    <div class="palette">
+      <input type="range" id="brush-size" min="1" max="50" value="5">
+      <input type="color" id="color-picker">
+      <button id="pen">pen</button>
+      <button id="eraser">eraser</button>
+      <button id="clear-canvas">Clear</button>
+    </div>
+  </div>
+
+
+
+
+<button id="ready">Ready Up</button>
+
+<p id="status">not ready!</p>
+
+
+
+<div class="container">
+
+</div>
+
+
+<div class="parent">
+<ul id="messages"></ul>
+<form id="form" action="">
+    <input id="input" autocomplete="off" /><button>Send</button>
+</form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const status = document.getElementById("status");
+    const readybtn = document.getElementById("ready");
+    ready = false;
+
+    readybtn.addEventListener('click', function() {
+        ready = !ready;
+        if(ready){
+            status.innerHTML = "ready!"
+        }
+        if(!ready){
+            status.innerHTML = "not ready!"
+        }
+        
+    })
+</script>
+
+
+<script>
+
+let counter = 0;
+let pfpcounter = 0;
+      
+      const socket = io({
+        auth: {
+          serverOffset: 0,
+          pfpserverOffset: 0
+        },
+        // enable retries
+        ackTimeout: 10000,
+        retries: 3,
+      });
+
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const messages = document.getElementById('messages');
+const user = document.getElementById("playername");
+const pfp = document.getElementById('pfp');
+const playerdisplay = document.getElementById('player-display');
+
+    //set playername from 'user' in localstorage
+    user.innerText = localStorage.getItem("user");
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (input.value) {
+            // compute a unique offset
+            const clientOffset = `${socket.id}-${counter++}`;
+            socket.emit('chat message', input.value, clientOffset);
+            input.value = '';
+          }
+        });
+      
+        socket.on('chat message', (msg, serverOffset) => {
+          const item = document.createElement('li');
+          item.textContent = msg;
+          messages.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
+          socket.auth.serverOffset = serverOffset;
+        });
+
+        pfp.onchange = evt =>{
+    const [file] = pfp.files
+    if (file){
+        document.getElementById("pfpDisplay").src=URL.createObjectURL(file);
+        socket.emit('pfp update', file, localStorage.getItem('uuid'));
+    }
+    };
+
+    socket.on('pfp update', (file, uuid) => {
+      const item = document.createElement('div');
+      const img = document.createElement('img');
+      const blob = new Blob([file]);
+      img.src=URL.createObjectURL(blob);
+      playerdisplay.appendChild(item).appendChild(img);
+    });
+
+
+
+</script>
+
+<script src="public/scripts/paint.js"></script>
+</body>
+
+
+
+</html>
