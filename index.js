@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import * as crypto from 'node:crypto';
+import { stringify } from 'node:querystring';
 
 // add the crypto module for UUID
 
@@ -36,6 +37,7 @@ await db.exec(`
 const app = express();
 const server = createServer(app)
 const io = new Server(server, {
+  maxHttpBufferSize: 1e8,
   connectionStateRecovery: {}
 });
 
@@ -88,8 +90,13 @@ io.on('connection', async (socket) => {
     });
 
     socket.on('pfp update', async (file, uuid, callback) => {
-        io.emit('pfp update', file, uuid);
-        callback();
+        let result;
+        result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+            console.log(file);
+            io.emit('pfp update', file, uuid, row.name);
+            callback();
+        });
+        
     });
   
     if (!socket.recovered) {

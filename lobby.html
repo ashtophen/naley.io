@@ -19,17 +19,18 @@
   
 
 </div>
-<form>
+<div id="photoselect">
+  <form>
     <input type="file" id="pfp" name="pfpname" accept="image/*">
-</form>
-<img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
-<br>
-
+  </form>
+  <img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
+  <br>
+</div>
 <p>Or, Draw Your Picture!</p>
 
-<button>DRAW!</button>
+<button id="drawtoggle">DRAW!</button>
 
-<div class="easle">
+<div class="easle" id="easle">
   <canvas id="canvas"></canvas>
     <div class="palette">
       <input type="range" id="brush-size" min="1" max="50" value="5">
@@ -127,14 +128,21 @@ const playerdisplay = document.getElementById('player-display');
         pfp.onchange = evt =>{
     const [file] = pfp.files
     if (file){
+        console.log(file);
         document.getElementById("pfpDisplay").src=URL.createObjectURL(file);
         socket.emit('pfp update', file, localStorage.getItem('uuid'));
     }
     };
 
-    socket.on('pfp update', (file, uuid) => {
+    socket.on('pfp update', (file, uuid, name) => {
+
       const item = document.createElement('div');
+      item.style.maxWidth = '100%';
+      item.classList.add('flexcontainer');
+      item.innerText = name;
       const img = document.createElement('img');
+      img.style.maxWidth = '80%';
+      console.log(file);
       const blob = new Blob([file]);
       img.src=URL.createObjectURL(blob);
       playerdisplay.appendChild(item).appendChild(img);
@@ -145,6 +153,26 @@ const playerdisplay = document.getElementById('player-display');
 </script>
 
 <script src="public/scripts/paint.js"></script>
+
+<script>
+  const drawtoggle = document.getElementById('drawtoggle');
+  const photoselect = document.getElementById('photoselect');
+  const easle = document.getElementById('easle');
+
+  drawtoggle.onclick = function() {
+    if(drawtoggle.innerText == "DRAW!"){
+    easle.style.display = "block";
+    photoselect.style.display = "none";
+    drawtoggle.innerText = "Choose File!";
+    }
+    else{
+      easle.style.display = "none";
+    photoselect.style.display = "block";
+    drawtoggle.innerText = "DRAW!";
+    }
+  }
+</script>
+
 </body>
 
 
