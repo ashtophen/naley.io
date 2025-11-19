@@ -7,81 +7,32 @@
 <body>
 <h1>Music Party</h1>
 
-<h2> Welcome To The Lobby!</h2>
-
-
-
-    <label for="uname">Player Name:</label>
-    <input type="text" id="uname" placeholder="Superwinner3000" required><br><br>
-
-<p>customize your photo!</p>
-
-<form>
-    <input type="file" id="pfp" name="pfpname" accept="image/*">
-
-
+<form id="formname">
+    <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
+    <br>
+    <input type="text" id="user">
 </form>
 
-<h1>NAME:</h1>
-<h2 id="playername"></h2>
-<img id="pfpDisplay" src="resources/images/oh_no.png" style="max-width: 126px; padding: 10px;">
-<br>
-<button id="ready">Ready Up</button>
-
-<p id="status">not ready!</p>
-
-
-
-<div class="container">
-
-<div></div>
-
-
-
-</div>
-
+<a href="lobby.html">join lobby</a>
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    pfp.onchange = evt =>{
-    const [file] = pfp.files
-    if (file){
-        document.getElementById("pfpDisplay").src=URL.createObjectURL(file);
-    }
-    }
+    const socket = io();
 
+user = document.getElementById("user");
+form = document.getElementById("formname");
+form.addEventListener('submit', (e) =>{
+e.preventDefault();
+ if(user.value){
+    socket.emit('name', user.value, (servedid) => {
+        localStorage.setItem('uuid', servedid);
+        console.log(servedid);
+    });
+    localStorage.setItem("user", user.value);
+    window.location.replace("lobby.html");
+ }
+ else(alert("You must have a name!"));
+});
 </script>
-
-<script>
-    const status = document.getElementById("status");
-    const readybtn = document.getElementById("ready");
-    ready = false;
-
-    readybtn.addEventListener('click', function() {
-        ready = !ready;
-        if(ready){
-            status.innerHTML = "ready!"
-        }
-        if(!ready){
-            status.innerHTML = "not ready!"
-        }
-        
-    })
-</script>
-
-<script>
-    const name = document.getElementById("uname");
-    document.getElementById("playername").innerHTML = name.placeholder;
-   name.addEventListener("keyup", () => {
-    document.getElementById("playername").innerHTML = name.value;
-    console.log(name);
-   });
-</script>
-
-<script>
-    
-</script>
-
 </body>
-
-
 
 </html>

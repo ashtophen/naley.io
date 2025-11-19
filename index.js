@@ -5,6 +5,11 @@ import { dirname, join } from 'node:path';
 import { Server } from 'socket.io';
 import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
+import * as crypto from 'node:crypto';
+
+// add the crypto module for UUID
+
+let uuid = crypto.randomUUID();
 
 // open the database file
 const db = await open({
@@ -12,7 +17,7 @@ const db = await open({
   driver: sqlite3.Database
 });
 
-// create our 'messages' table (you can ignore the 'client_offset' column for now)
+// create our 'messages' table
 await db.exec(`
   CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,20 +25,50 @@ await db.exec(`
       content TEXT
   );
 `);
-
+// create the 'user' table (ADD SPOTIFY ACCOUNT INFO LATER)
+await db.exec(`
+    CREATE TABLE IF NOT EXISTS user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        uuid TEXT
+    );
+`);
 const app = express();
-const server = createServer(app);
+const server = createServer(app)
 const io = new Server(server, {
   connectionStateRecovery: {}
 });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+app.use('/public', express.static(join(__dirname, 'public')));
+
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
 
+app.get('/style.css', (req, res) => {
+    res.sendFile(join(__dirname, 'style.css'));
+  });
+
+  app.get('/lobby.html', (req, res) => {
+    res.sendFile(join(__dirname, 'lobby.html'));
+  });
+
+  app.get('/bytebounce/ByteBounce.woff2', (req, res) => {
+    res.sendFile(join(__dirname, '/bytebounce/ByteBounce.woff2'));
+  });
+
 io.on('connection', async (socket) => {
+
+    socket.on('name', async (user, servedid) => {
+        let result;
+        const clientid = uuid;
+        result = await db.run('INSERT INTO user (name, uuid) VALUES (?, ?)', user, clientid);
+        servedid(clientid);
+
+    });
+
     socket.on('chat message', async (msg, clientOffset, callback) => {
       let result;
       try {
@@ -50,6 +85,11 @@ io.on('connection', async (socket) => {
       io.emit('chat message', msg, result.lastID);
       // acknowledge the event
       callback();
+    });
+
+    socket.on('pfp update', async (file, uuid, callback) => {
+        io.emit('pfp update', file, uuid);
+        callback();
     });
   
     if (!socket.recovered) {
