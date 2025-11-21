@@ -7,6 +7,7 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import * as crypto from 'node:crypto';
 import { stringify } from 'node:querystring';
+import { fsync, readFile, readFileSync, readdir, readdirSync, statSync, unlink, unlinkSync, writeFileSync } from 'node:fs';
 
 // add the crypto module for UUID
 
@@ -44,6 +45,7 @@ const io = new Server(server, {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use('/public', express.static(join(__dirname, 'public')));
+
 
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
@@ -91,11 +93,23 @@ io.on('connection', async (socket) => {
 
     socket.on('pfp update', async (file, uuid, callback) => {
         let result;
-        result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+        if(file != 'filler'){
             console.log(file);
+        writeFileSync(`./public/tempfiles/${uuid}.png`, file);
+        result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
             io.emit('pfp update', file, uuid, row.name);
             callback();
         });
+        }
+        else{
+            console.log(file);
+            result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+                console.log()
+            readFileSync(join(__dirname, "/public/images/oh_no.PNG")), (err, data) => {
+            io.emit('pfp update', data, uuid, row.name);
+            }
+            });
+        }
         
     });
   
@@ -105,13 +119,64 @@ io.on('connection', async (socket) => {
           [socket.handshake.auth.serverOffset || 0],
           (_err, row) => {
             socket.emit('chat message', row.content, row.id);
+        
           }
         )
+        const files = readdirSync(join(__dirname, '/public/tempfiles'));
+            const filenames = [];
+            files.forEach(file => {
+                let result;
+                let uuid = file.replace(/\..*/, "");
+                result = db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+                
+                if (statSync(join(__dirname, '/public/tempfiles', file)).isFile()) {
+                
+                filenames.push(uuid);
+                    console.log(filenames);
+                }
+                readFile(join(__dirname, "/public/tempfiles", file), (err, data) =>{
+                    if (err) {
+                        console.error('error reading file:', err);
+                        return;
+                    }
+                    socket.emit('pfp update', data, uuid, row.name);
+                });
+        
+                });
+            });
       } catch (e) {
         // something went wrong
       }
     }
   });
+
+  function emptyDirectory(dirPath) {
+    console.log(dirPath);
+    try {
+        const files = readdirSync(dirPath);
+        for (const file of files) {
+            const filePath = join(dirPath, file);
+            unlinkSync(filePath);
+            console.log(`Deleted: ${filePath}`);
+        }
+        console.log(`All files deleted from: ${dirPath}`);
+    } catch (err) {
+        console.error(`Error emptying directory ${dirPath}:`, err);
+    }
+};
+
+  // Listen for process termination signals
+process.on('SIGINT', () => {
+    console.log('\nReceived SIGINT signal. Performing cleanup...');
+    emptyDirectory(`${__dirname}/public/tempfiles`);
+    process.exit(130); // Exit after cleanup
+});
+
+process.on('SIGTERM', () => {
+    console.log('\nReceived SIGTERM signal. Performing cleanup...');
+    emptyDirectory(`${__dirname}/public/tempfiles`);
+    process.exit(143); // Exit after cleanup (typical exit code for SIGTERM)
+});
 
 server.listen(3000, () => {
   console.log('server running at http://localhost:3000');
