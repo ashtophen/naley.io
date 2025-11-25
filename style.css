@@ -85,6 +85,7 @@ input[type="text"]::placeholder {
 }
 #messages > li {
     padding: 0.5rem 1rem;
+    text-align: left;
 }
 
 #form{

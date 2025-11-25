@@ -115,7 +115,7 @@ const easle = document.getElementById('easle');
           if (input.value) {
             // compute a unique offset
             const clientOffset = `${socket.id}-${counter++}`;
-            socket.emit('chat message', input.value, clientOffset);
+            socket.emit('chat message', input.value, clientOffset, localStorage.getItem('user'));
             input.value = '';
           }
         });
@@ -162,6 +162,7 @@ const easle = document.getElementById('easle');
       const status = document.getElementById("status");
       const readybtn = document.getElementById("ready");
     ready = false;
+      socket.emit('ready change', ready, localStorage.getItem('uuid'));
     readybtn.addEventListener('click', function() {
         ready = !ready;
         if(ready){

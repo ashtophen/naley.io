@@ -74,8 +74,9 @@ io.on('connection', async (socket) => {
         
     });
 
-    socket.on('chat message', async (msg, clientOffset, callback) => {
+    socket.on('chat message', async (msg, clientOffset, user, callback) => {
       let result;
+      msg = user + ": " + msg;
       try {
         result = await db.run('INSERT INTO messages (content, client_offset) VALUES (?, ?)', msg, clientOffset);
       } catch (e) {
@@ -134,7 +135,7 @@ io.on('connection', async (socket) => {
             files.forEach(file => {
                 let result;
                 let uuid = file.replace(/\..*/, "");
-                result = db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+                result = db.each('SELECT name, ready FROM user WHERE uuid = ?', uuid, (_err, row) => {
                 
                 if (statSync(join(__dirname, '/public/tempfiles', file)).isFile()) {
                 
@@ -147,6 +148,7 @@ io.on('connection', async (socket) => {
                         return;
                     }
                     socket.emit('pfp update', data, uuid, row.name);
+                    socket.emit('ready change', row.ready, uuid);
                 });
         
                 });
