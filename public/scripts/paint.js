@@ -1,17 +1,13 @@
 //magic.js
+
 //Obtain the canvas and its 2d rendering context
-const canvas =
-	document.getElementById('canvas');
-const ctx =
-	canvas.getContext('2d');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
 
 //Get the refernce to HTML elements
-const brushSize =
-	document.getElementById('brush-size');
-const colorPicker =
-	document.getElementById('color-picker');
-const clearCanvas =
-	document.getElementById('clear-canvas');
+const brushSize = document.getElementById('brush-size');
+const colorPicker = document.getElementById('color-picker');
+const clearCanvas = document.getElementById('clear-canvas');
 let isDrawing = false;
 
 //Initializing the canvas
@@ -22,6 +18,8 @@ canvas.height =
 ctx.lineWidth = 5;
 ctx.lineCap = 'round';
 ctx.strokeStyle = 'black';
+ctx.fillStyle = '#FFFFFF'; // White background
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 //start drawing
 function startPosition(e) {
@@ -54,6 +52,9 @@ function draw(e) {
 		e.clientX - canvas.offsetLeft,
 		e.clientY - canvas.offsetTop
 	);
+    canvas.toBlob(function(blob){
+    socket.emit('pfp update', blob, localStorage.getItem('uuid'));
+});
 }
 
 //event listener for differnt mouse actions

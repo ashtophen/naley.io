@@ -14,22 +14,23 @@
 
 <p>customize your photo!</p>
 <div class="flex-container-column" id="player-display">
-
+  <div>PLAYERS:</div>
 
   
 
 </div>
-<form>
+<div id="photoselect">
+  <form>
     <input type="file" id="pfp" name="pfpname" accept="image/*">
-</form>
-<img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
-<br>
-
+  </form>
+  <img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
+  <br>
+</div>
 <p>Or, Draw Your Picture!</p>
 
-<button>DRAW!</button>
+<button id="drawtoggle">DRAW!</button>
 
-<div class="easle">
+<div class="easle" id="easle">
   <canvas id="canvas"></canvas>
     <div class="palette">
       <input type="range" id="brush-size" min="1" max="50" value="5">
@@ -64,44 +65,47 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script>
-    const status = document.getElementById("status");
-    const readybtn = document.getElementById("ready");
-    ready = false;
 
-    readybtn.addEventListener('click', function() {
-        ready = !ready;
-        if(ready){
-            status.innerHTML = "ready!"
-        }
-        if(!ready){
-            status.innerHTML = "not ready!"
-        }
-        
-    })
 </script>
 
 
 <script>
 
 let counter = 0;
-let pfpcounter = 0;
       
       const socket = io({
         auth: {
           serverOffset: 0,
-          pfpserverOffset: 0
         },
         // enable retries
         ackTimeout: 10000,
         retries: 3,
       });
-
+//variables for chat messaging
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
+//player stuff
 const user = document.getElementById("playername");
 const pfp = document.getElementById('pfp');
 const playerdisplay = document.getElementById('player-display');
+//toggle photo/drawing variables
+const drawtoggle = document.getElementById('drawtoggle');
+const photoselect = document.getElementById('photoselect');
+const easle = document.getElementById('easle');
+
+  drawtoggle.onclick = function() {
+    if(drawtoggle.innerText == "DRAW!"){
+    easle.style.display = "block";
+    photoselect.style.display = "none";
+    drawtoggle.innerText = "Choose File!";
+    }
+    else{
+      easle.style.display = "none";
+    photoselect.style.display = "block";
+    drawtoggle.innerText = "DRAW!";
+    }
+  }
 
     //set playername from 'user' in localstorage
     user.innerText = localStorage.getItem("user");
@@ -120,31 +124,82 @@ const playerdisplay = document.getElementById('player-display');
           const item = document.createElement('li');
           item.textContent = msg;
           messages.appendChild(item);
-          window.scrollTo(0, document.body.scrollHeight);
+          messages.scrollTo(0, messages.scrollHeight);
           socket.auth.serverOffset = serverOffset;
         });
 
         pfp.onchange = evt =>{
     const [file] = pfp.files
     if (file){
+        console.log(file);
         document.getElementById("pfpDisplay").src=URL.createObjectURL(file);
         socket.emit('pfp update', file, localStorage.getItem('uuid'));
     }
     };
 
-    socket.on('pfp update', (file, uuid) => {
-      const item = document.createElement('div');
-      const img = document.createElement('img');
+    socket.on('pfp update', (file, uuid, name) => {
       const blob = new Blob([file]);
-      img.src=URL.createObjectURL(blob);
-      playerdisplay.appendChild(item).appendChild(img);
-    });
+      const img = document.createElement('img');
+      const item = document.createElement('div');
+      console.log(playerdisplay.children);
 
+        if (playerdisplay.querySelector(`[data-uuid=_${uuid}]`)) {
+          playerdisplay.querySelector(`[data-uuid=_${uuid}]`).children[0].src=URL.createObjectURL(blob);
+        }
+        else{
+          item.style.maxWidth = '100%';
+          item.classList.add('flexcontainer');
+          item.dataset.uuid = "_" + uuid;
+          item.innerText = name;
+          img.style.maxWidth = '80%';
+          console.log(file);
+          img.src=URL.createObjectURL(blob);
+          playerdisplay.appendChild(item).appendChild(img);
+        }
+      });
 
+      //ready button logic
+      const status = document.getElementById("status");
+      const readybtn = document.getElementById("ready");
+    ready = false;
+    readybtn.addEventListener('click', function() {
+        ready = !ready;
+        if(ready){
+            status.innerHTML = "ready!";
+            socket.emit('ready change', ready, localStorage.getItem('uuid'));
+        }
+        if(!ready){
+            status.innerHTML = "not ready!";
+            socket.emit('ready change', ready, localStorage.getItem('uuid'));
 
+        }
+      });
+        //recieving ready changes
+        socket.on('ready change', (ready, uuid) => {
+          console.log(ready);
+          if(ready){ 
+            if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              console.log(uuid);
+              playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'green';
+            }
+          }
+          if(!ready){
+            console.log('made it');
+            if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'transparent';
+            }
+          }
+
+        });
+  socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));
 </script>
 
 <script src="public/scripts/paint.js"></script>
+
+<script>
+
+</script>
+
 </body>
 
 

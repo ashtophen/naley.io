@@ -108,13 +108,26 @@ input[type="text"]::placeholder {
 
 }
 
+.flexcontainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#player-display > div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 200px;
+
+}
 
 
 
 
 /* painting styles */
 .easle {
-    visibility: hidden;
+    display: none;
 }
 
 canvas {
