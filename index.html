@@ -10,7 +10,7 @@
 <form id="formname">
     <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
     <br>
-    <input type="text" id="user">
+    <input type="text" id="user" maxlength="10">
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -22,12 +22,12 @@ form = document.getElementById("formname");
 form.addEventListener('submit', (e) =>{
 e.preventDefault();
  if(user.value){
-    socket.emit('name', user.value, (servedid) => {
-        localStorage.setItem('uuid', servedid);
-        console.log(servedid);
+    socket.emit('name', user.value);
+    socket.on('name', (clientname, clientid) => {
+        localStorage.setItem("user", clientname);
+        localStorage.setItem("uuid", clientid);
+        window.location.replace("lobby.html");
     });
-    localStorage.setItem("user", user.value);
-    window.location.replace("lobby.html");
  }
  else(alert("You must have a name!"));
 });

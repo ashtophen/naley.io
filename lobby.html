@@ -72,23 +72,40 @@
 <script>
 
 let counter = 0;
-let pfpcounter = 0;
       
       const socket = io({
         auth: {
           serverOffset: 0,
-          pfpserverOffset: 0
         },
         // enable retries
         ackTimeout: 10000,
         retries: 3,
       });
+//variables for chat messaging
 const form = document.getElementById('form');
 const input = document.getElementById('input');
 const messages = document.getElementById('messages');
+//player stuff
 const user = document.getElementById("playername");
 const pfp = document.getElementById('pfp');
 const playerdisplay = document.getElementById('player-display');
+//toggle photo/drawing variables
+const drawtoggle = document.getElementById('drawtoggle');
+const photoselect = document.getElementById('photoselect');
+const easle = document.getElementById('easle');
+
+  drawtoggle.onclick = function() {
+    if(drawtoggle.innerText == "DRAW!"){
+    easle.style.display = "block";
+    photoselect.style.display = "none";
+    drawtoggle.innerText = "Choose File!";
+    }
+    else{
+      easle.style.display = "none";
+    photoselect.style.display = "block";
+    drawtoggle.innerText = "DRAW!";
+    }
+  }
 
     //set playername from 'user' in localstorage
     user.innerText = localStorage.getItem("user");
@@ -156,42 +173,31 @@ const playerdisplay = document.getElementById('player-display');
             socket.emit('ready change', ready, localStorage.getItem('uuid'));
 
         }
+      });
         //recieving ready changes
-        socket.on('ready change', (ready, uuid, name) => {
+        socket.on('ready change', (ready, uuid) => {
+          console.log(ready);
           if(ready){ 
             if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              console.log(uuid);
               playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'green';
             }
-            else{
-              return;
+          }
+          if(!ready){
+            console.log('made it');
+            if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'transparent';
             }
           }
 
         });
-        
-    });
-    // socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));
+  socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));
 </script>
 
 <script src="public/scripts/paint.js"></script>
 
 <script>
-  const drawtoggle = document.getElementById('drawtoggle');
-  const photoselect = document.getElementById('photoselect');
-  const easle = document.getElementById('easle');
 
-  drawtoggle.onclick = function() {
-    if(drawtoggle.innerText == "DRAW!"){
-    easle.style.display = "block";
-    photoselect.style.display = "none";
-    drawtoggle.innerText = "Choose File!";
-    }
-    else{
-      easle.style.display = "none";
-    photoselect.style.display = "block";
-    drawtoggle.innerText = "DRAW!";
-    }
-  }
 </script>
 
 </body>

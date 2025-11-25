@@ -7,7 +7,7 @@ import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import * as crypto from 'node:crypto';
 import { stringify } from 'node:querystring';
-import { fsync, readFile, readFileSync, readdir, readdirSync, statSync, unlink, unlinkSync, writeFileSync } from 'node:fs';
+import { createReadStream, fsync, readFile, readFileSync, readdir, readdirSync, rmSync, statSync, unlink, unlinkSync, writeFileSync } from 'node:fs';
 
 // add the crypto module for UUID
 
@@ -32,7 +32,8 @@ await db.exec(`
     CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        uuid TEXT
+        uuid TEXT,
+        ready INTEGER NOT NULL DEFAULT 0
     );
 `);
 const app = express();
@@ -64,13 +65,13 @@ app.get('/style.css', (req, res) => {
   });
 
 io.on('connection', async (socket) => {
-
-    socket.on('name', async (user, servedid) => {
+    socket.on('name', async (user) => {
+        const limiteduser = user.replace(/^(.{10}).*$/, '$1');
         let result;
-        const clientid = uuid;
-        result = await db.run('INSERT INTO user (name, uuid) VALUES (?, ?)', user, clientid);
-        servedid(clientid);
-
+        uuid = crypto.randomUUID();
+        result = await db.run('INSERT INTO user (name, uuid) VALUES (?, ?)', limiteduser, uuid);
+        io.emit('name', limiteduser, uuid);
+        
     });
 
     socket.on('chat message', async (msg, clientOffset, callback) => {
@@ -91,25 +92,31 @@ io.on('connection', async (socket) => {
       callback();
     });
 
+    socket.on('ready change', async (ready, uuid, callback) => {
+      console.log(ready, uuid);
+      let intready;
+      let result;
+      intready = Number(ready);
+      result = await db.run('UPDATE user SET ready = ? WHERE uuid = ?', intready, uuid);
+      io.emit('ready change', ready, uuid);
+
+      callback();
+
+    })
+
     socket.on('pfp update', async (file, uuid, callback) => {
         let result;
-        if(file != 'filler'){
             console.log(file);
+        if(file == 'filler') {
+            const buffer = readFileSync(`${__dirname}/public/images/oh_no.PNG`);
+            file  = buffer;
+        }
         writeFileSync(`./public/tempfiles/${uuid}.png`, file);
-        result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
+        result = await db.each('SELECT name, ready FROM user WHERE uuid = ?', uuid, (_err, row) => {
             io.emit('pfp update', file, uuid, row.name);
+            io.emit('ready change', row.ready, uuid);
             callback();
         });
-        }
-        else{
-            console.log(file);
-            result = await db.each('SELECT name FROM user WHERE uuid = ?', uuid, (_err, row) => {
-                console.log()
-            readFileSync(join(__dirname, "/public/images/oh_no.PNG")), (err, data) => {
-            io.emit('pfp update', data, uuid, row.name);
-            }
-            });
-        }
         
     });
   
@@ -144,6 +151,7 @@ io.on('connection', async (socket) => {
         
                 });
             });
+          // add ready status catch.
       } catch (e) {
         // something went wrong
       }
