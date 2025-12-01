@@ -188,6 +188,6 @@ process.on('SIGTERM', () => {
     process.exit(143); // Exit after cleanup (typical exit code for SIGTERM)
 });
 
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+server.listen(80, () => {
+  console.log('server running at http://localhost:80');
 });
