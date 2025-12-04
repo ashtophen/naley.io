@@ -1,37 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+<!Doctype html>
 <head>
-  <link rel="stylesheet" href="style.css">
-  <meta charset="utf-8" />
+    <title>Naley.io Homepage</title>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description" content="Development page for Nathen Perley">
+    <meta name="author" content="Nathen Perley">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+<header style="position: absolute; top:0; width: 100vw;  height: fit-content;  background-color: rgb(33, 33, 48);">
+    <h1 style="justify-self: center;">Naley.io</h1>
+
+
+
+</header>
+
 <body>
-<h1>Music Party</h1>
+<div style="height: 10vh">
 
-<form id="formname">
-    <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
-    <br>
-    <input type="text" id="user" maxlength="10">
-</form>
+</div>
 
-<script src="/socket.io/socket.io.js"></script>
+
+<div>
+    <p style="font-size: xx-large;">Projects!</p>
+</div>
+<div class="flexcontainer">
+    <a class="button" href="http://naley.io/musicparty">Music Party</a>
+</div>
+
+<div><p></p></div>
+
+
+<footer style="position:absolute; bottom:0; width: 100vw; height: fit-content;  background-color: rgb(33, 33, 48);">
+    <div class="flexcontainer-row">
+        <a class="button" href="http://kanboard.naley.io/?controller=BoardViewController&action=readonly&token=ed3d533403c5a3612b8b537956772e0b3afe937a0d4e4e8297ece2152aa8" target="_blank">Project Tracker</a>
+        <a class="button" href="about.html">About</a>
+        <a class="button" href="https://discord.com/invite/dU57VBg9sb" target="_blank">Discord</a>
+    </div>
+</footer>
+
+
+
 <script>
-    const socket = io();
-
-user = document.getElementById("user");
-form = document.getElementById("formname");
-form.addEventListener('submit', (e) =>{
-e.preventDefault();
- if(user.value){
-    socket.emit('name', user.value);
-    socket.on('name', (clientname, clientid) => {
-        localStorage.setItem("user", clientname);
-        localStorage.setItem("uuid", clientid);
-        window.location.replace("lobby.html");
-    });
- }
- else(alert("You must have a name!"));
-});
 </script>
-</body>
 
-</html>
+</body>

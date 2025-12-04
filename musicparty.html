@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+</head>
+<body>
+<h1>Music Party</h1>
+
+<form id="formname">
+    <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
+    <br>
+    <input type="text" id="user" maxlength="10">
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+user = document.getElementById("user");
+form = document.getElementById("formname");
+form.addEventListener('submit', (e) =>{
+e.preventDefault();
+ if(user.value){
+    socket.emit('name', user.value);
+    socket.on('name', (clientname, clientid) => {
+        localStorage.setItem("user", clientname);
+        localStorage.setItem("uuid", clientid);
+        window.location.replace("lobby.html");
+    });
+ }
+ else(alert("You must have a name!"));
+});
+</script>
+</body>
+
+</html>
