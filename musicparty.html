@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="style.css">
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <h1>Music Party</h1>
@@ -12,6 +13,22 @@
     <br>
     <input type="text" id="user" maxlength="10">
 </form>
+
+<div class="flexcontainer-row" id="lobby-selection" style="visibility:hidden;">
+<div>
+Host A Game:
+<br>
+<button id="hostbtn" ontouchstart="">Host</button>
+</div>
+
+<div>
+Join A Game:
+<br>
+<input type="text" id="lobby-code" maxlength="4">
+<br>
+<button ontouchstart="">Join</button>
+</div>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -26,11 +43,21 @@ e.preventDefault();
     socket.on('name', (clientname, clientid) => {
         localStorage.setItem("user", clientname);
         localStorage.setItem("uuid", clientid);
-        window.location.replace("lobby.html");
+        document.getElementById("lobby-selection").style.visibility = "visible";
+        // window.location.replace("lobby.html");
     });
  }
  else(alert("You must have a name!"));
 });
+
+hostbtn = document.getElementById('hostbtn');
+hostbtn.addEventListener('click', function() {
+    socket.emit('host');
+
+});
+
+//socket.on('host')
+
 </script>
 </body>
 

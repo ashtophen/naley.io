@@ -3,12 +3,13 @@
 <head>
   <link rel="stylesheet" href="style.css">
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<h1>Music Party</h1>
+<h1 style="margin: 10px">Music Party</h1>
 
 <h2> Welcome To The Lobby!</h2>
-<h1>NAME:</h1>
+<h2>NAME:</h2>
 <h2 id="playername"></h2>
 
 
@@ -23,28 +24,28 @@
   <form>
     <input type="file" id="pfp" name="pfpname" accept="image/*">
   </form>
-  <img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; padding: 10px;">
+  <img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; max-height: 10vh; padding: 10px;">
   <br>
 </div>
 <p>Or, Draw Your Picture!</p>
 
-<button id="drawtoggle">DRAW!</button>
+<button id="drawtoggle" ontouchstart="">DRAW!</button>
 
 <div class="easle" id="easle">
   <canvas id="canvas"></canvas>
     <div class="palette">
       <input type="range" id="brush-size" min="1" max="50" value="5">
       <input type="color" id="color-picker">
-      <button id="pen">pen</button>
-      <button id="eraser">eraser</button>
-      <button id="clear-canvas">Clear</button>
+      <button ontouchstart="" id="pen">pen</button>
+      <button ontouchstart="" id="eraser">eraser</button>
+      <button ontouchstart="" id="clear-canvas">Clear</button>
     </div>
   </div>
 
 
 
 
-<button id="ready">Ready Up</button>
+<button id="ready" ontouchstart="">Ready Up</button>
 
 <p id="status">not ready!</p>
 
@@ -58,7 +59,7 @@
 <div class="chat">
 <ul id="messages"></ul>
 <form id="form" action="">
-    <input id="input" autocomplete="off" /><button class="send">Send</button>
+    <input id="input" autocomplete="off" /><button class="send" ontouchstart="">Send</button>
 </form>
 </div>
 
@@ -148,10 +149,15 @@ const easle = document.getElementById('easle');
         }
         else{
           item.style.maxWidth = '100%';
+          item.style.justifySelf ='center';
+          item.style.padding = '8px';
+          item.style.display = 'block';
           item.classList.add('flexcontainer');
           item.dataset.uuid = "_" + uuid;
-          item.innerText = name;
-          img.style.maxWidth = '80%';
+          item.innerText = name + ":";
+          img.style.display = 'block';
+          img.style.justifySelf = "center";
+          img.style.maxWidth = '16vw';
           console.log(file);
           img.src=URL.createObjectURL(blob);
           playerdisplay.appendChild(item).appendChild(img);

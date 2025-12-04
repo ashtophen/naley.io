@@ -4,18 +4,23 @@
 }
 
 html {
-    color: #F7A5A5;
+    color: rgb(255, 186, 108);
+	background-color: rgb(33, 33, 74);
     font-family:'Bytebounce';
 }
 
+* {
+    margin: 0;
+}
 
 body {
     font-family: Bytebounce;
     text-align: center;
-    background-color: #1A2A4F;
+    background-color: rgb(33, 33, 74);
     
 }
 h1{
+	font-size: 5vh;
 	justify-self: center;
 }
 
@@ -27,7 +32,7 @@ p{
     font-size: 24px;
 }
 
-.container{
+/*	.container{
     display: grid;
     grid-template-areas:
     "header header"
@@ -39,10 +44,12 @@ p{
   padding: 10px;
 }
 
+
 .container div{
 
 }
 
+*/
 button {
     font-family: 'Bytebounce';
     transition: all 0.5s ease-in-out;
@@ -58,10 +65,20 @@ button {
     border-left: 1px solid #CCCCCC;
 }
 
-button:hover {
-    background-color: darkcyan;
-    transform: scale(1.1);
+@media(hover:hover) {
+    button:hover{
+        background-color: darkcyan;
+        transform: scale(1.1);
+    }
 }
+
+button:active{
+    background-color: darkcyan;
+    transform: scale(.9);
+    transition-duration: 0.1s;
+}
+
+
 
 .button-class{
 background-color: #1A2A4F;
@@ -91,7 +108,8 @@ input[type="text"]::placeholder {
 
 #messages{
     list-style-type: none;
-    border: 5px, solid, #F7A5A5;
+    border-style: solid;
+	border: 5px, solid, #F7A5A5;
     position: absolute;
     left: 0%;
     height: 300px;
@@ -127,10 +145,11 @@ input[type="text"]::placeholder {
 
 .flex-container-column {
     position: absolute;
-    border: 5px, solid, black;
+    border-style: solid;
+	border: 5px, solid, black;
     top: 5px;
-    left: 80%;
-    min-width: 18%;
+    left: 78vw;
+    min-width: 20vw;
     flex-direction: column;
     min-height: 80vh;
 
@@ -146,7 +165,7 @@ input[type="text"]::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 200px;
+    max-width: 18vw;
 
 }
 

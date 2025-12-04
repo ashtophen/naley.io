@@ -121,6 +121,10 @@ io.on('connection', async (socket) => {
         
     });
   
+    //ROOM HOSTING
+    
+
+
     if (!socket.recovered) {
       try {
         await db.each('SELECT id, content FROM messages WHERE id > ?',
