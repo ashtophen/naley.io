@@ -45,13 +45,24 @@ p{
 
 button {
     font-family: 'Bytebounce';
+    transition: all 0.5s ease-in-out;
     font-size: xx-large;
-    background-color: #CCCCCC;
-    color: #F7A5A5;
-    border-radius: 5px;
-    border: 5px, solid, #FFDBB6;
-    box-shadow: 0, 3px, 3px, 0, black;
+    text-decoration: none;
+    background-color: #4b3b9b;
+    color: rgb(255, 186, 108);
+    padding: 2px 6px 2px 6px;
+    border-radius: 4px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    border-left: 1px solid #CCCCCC;
 }
+
+button:hover {
+    background-color: darkcyan;
+    transform: scale(1.1);
+}
+
 .button-class{
 background-color: #1A2A4F;
 border: none;
