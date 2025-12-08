@@ -116,14 +116,14 @@ const easle = document.getElementById('easle');
           if (input.value) {
             // compute a unique offset
             const clientOffset = `${socket.id}-${counter++}`;
-            socket.emit('chat message', input.value, clientOffset, localStorage.getItem('user'));
+            socket.emit('chat message', input.value, clientOffset, localStorage.getItem('user'), localStorage.getItem('color'));
             input.value = '';
           }
         });
       
         socket.on('chat message', (msg, serverOffset) => {
           const item = document.createElement('li');
-          item.textContent = msg;
+          item.innerHTML = msg;
           messages.appendChild(item);
           messages.scrollTo(0, messages.scrollHeight);
           socket.auth.serverOffset = serverOffset;
@@ -157,7 +157,7 @@ const easle = document.getElementById('easle');
           item.innerText = name + ":";
           img.style.display = 'block';
           img.style.justifySelf = "center";
-          img.style.maxWidth = '16vw';
+          img.style.width = 'min(16vw, 126px)';
           console.log(file);
           img.src=URL.createObjectURL(blob);
           playerdisplay.appendChild(item).appendChild(img);

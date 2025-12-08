@@ -33,7 +33,8 @@ await db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         uuid TEXT,
-        ready INTEGER NOT NULL DEFAULT 0
+        ready INTEGER NOT NULL DEFAULT 0,
+		color TEXT
     );
 `);
 const app = express();
@@ -69,14 +70,16 @@ io.on('connection', async (socket) => {
         const limiteduser = user.replace(/^(.{10}).*$/, '$1');
         let result;
         uuid = crypto.randomUUID();
-        result = await db.run('INSERT INTO user (name, uuid) VALUES (?, ?)', limiteduser, uuid);
-        io.emit('name', limiteduser, uuid);
-        
+		const rb = crypto.randomBytes(3);
+		const hexc = rb.toString('hex');
+		const fincol = `#${hexc}`;
+        result = await db.run('INSERT INTO user (name, uuid, color) VALUES (?, ?, ?)', limiteduser, uuid, fincol);
+        io.emit('name', limiteduser, uuid, fincol);
     });
 
-    socket.on('chat message', async (msg, clientOffset, user, callback) => {
+    socket.on('chat message', async (msg, clientOffset, user, color, callback) => {
       let result;
-      msg = user + ": " + msg;
+      msg =`<span style="color: ${color}">${user}: </span>` + msg;
       try {
         result = await db.run('INSERT INTO messages (content, client_offset) VALUES (?, ?)', msg, clientOffset);
       } catch (e) {
@@ -120,6 +123,7 @@ io.on('connection', async (socket) => {
         });
         
     });
+	
   
     //ROOM HOSTING
     

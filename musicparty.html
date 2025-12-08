@@ -4,8 +4,10 @@
   <link rel="stylesheet" href="style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body>
+<div class="preloader"><h1>N<h1></div>
 <h1>Music Party</h1>
 
 <form id="formname">
@@ -26,11 +28,12 @@ Join A Game:
 <br>
 <input type="text" id="lobby-code" maxlength="4">
 <br>
-<button ontouchstart="">Join</button>
+<button id="joinbtn" ontouchstart="">Join</button>
 </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="/public/scripts/preloading.js"></script>
 <script>
     const socket = io();
 
@@ -40,11 +43,12 @@ form.addEventListener('submit', (e) =>{
 e.preventDefault();
  if(user.value){
     socket.emit('name', user.value);
-    socket.on('name', (clientname, clientid) => {
+    socket.on('name', (clientname, clientid, fincol) => {
         localStorage.setItem("user", clientname);
         localStorage.setItem("uuid", clientid);
+		localStorage.setItem("color", fincol);
         document.getElementById("lobby-selection").style.visibility = "visible";
-        // window.location.replace("lobby.html");
+        window.location.replace("lobby.html");
     });
  }
  else(alert("You must have a name!"));
