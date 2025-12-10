@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<div id="pregame">
+<div class="preloader"><h1>N<h1></div>
+<h1>Welcome</h1>
+
+<div>Players:
+<div id="player-display" class="flexcontainer solidborder"></div>
+</div>
+<div style="justify-self: center;" id="start"></div>
+<div style="justify-self: center;" id="countdown"></div>
+
+<div class="chat">
+    <ul id="messages"></ul>
+    
+    </div>
+</div>
+
+<div id="rounds">
+
+</div>
+
+<div id="postgame">
+
+</div>
+
+    <script src="/public/scripts/preloading.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let counter = 0;
+      
+      const socket = io({
+        auth: {
+          serverOffset: 0,
+        },
+        // enable retries
+        ackTimeout: 10000,
+        retries: 3,
+      });
+
+        //variables for chat messaging
+        const form = document.getElementById('form');
+        const input = document.getElementById('input');
+        const messages = document.getElementById('messages');
+        //player stuff
+        const user = document.getElementById("playername");
+        const pfp = document.getElementById('pfp');
+        const playerdisplay = document.getElementById('player-display');
+        const players = [];
+        //pregame timer
+        let countdownId;
+        let timeLeft = 5;
+        //countdown
+        function startCountdown() {
+    // Prevent multiple timers from running simultaneously
+    if (countdownId) {
+        clearInterval(countdownId);
+    }
+
+    countdownId = setInterval(() => {
+        timeLeft--;
+        // Update the display (assuming an element with id "countdown" exists)
+        document.getElementById("countdown").textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdownId); // Stop the timer when it reaches zero
+            timeLeft = 5; // Reset time for the next start
+        }
+    }, 1000);
+  }
+        // stopit
+        function stopCountdown() {
+    if (countdownId) {
+        clearInterval(countdownId); // Cancel the running interval
+        countdownId = null; // Reset the ID after stopping
+        timeLeft = 5;
+    }
+}
+
+
+        //bob
+        function bob(){
+        players.forEach(player => {
+          if(typeof player !== 'undefined'){   
+          if(player.style.backgroundColor !== 'green'){
+            document.getElementById('start').innerText = 'that is not very bob of you';
+          }
+          else{
+            document.getElementById('start').innerText = 'bob';
+            startCountdown();
+            return;
+          }
+        }
+        });
+      };
+
+
+        socket.on('chat message', (msg, serverOffset) => {
+          const item = document.createElement('li');
+          item.innerHTML = msg;
+          messages.appendChild(item);
+          messages.scrollTo(0, messages.scrollHeight);
+          socket.auth.serverOffset = serverOffset;
+        });
+
+        socket.on('pfp update', (file, uuid, name) => {
+      const blob = new Blob([file]);
+      const img = document.createElement('img');
+      const item = document.createElement('div');
+      console.log(playerdisplay.children);
+
+
+        if (playerdisplay.querySelector(`[data-uuid=_${uuid}]`)) {
+          playerdisplay.querySelector(`[data-uuid=_${uuid}]`).children[0].src=URL.createObjectURL(blob);
+        }
+        else{
+          item.style.maxWidth = '100%';
+          item.style.justifySelf ='center';
+          item.style.padding = '8px';
+          item.style.display = 'block';
+          item.classList.add('flexcontainer');
+          item.dataset.uuid = "_" + uuid;
+          item.innerText = name + ":";
+          img.style.display = 'block';
+          img.style.justifySelf = "center";
+          img.style.width = 'min(16vw, 126px)';
+          console.log(file);
+          img.src=URL.createObjectURL(blob);
+          playerdisplay.appendChild(item).appendChild(img);
+          players.push(item);
+        }
+      });
+
+      socket.on('ready change', (ready, uuid) => {
+          console.log(ready);
+          if(ready){ 
+            if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              console.log(uuid);
+              playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'green';
+            }
+          }
+          if(!ready){
+            if(playerdisplay.querySelector(`[data-uuid=_${uuid}]`)){
+              playerdisplay.querySelector(`[data-uuid=_${uuid}]`).style.backgroundColor = 'transparent';
+              stopCountdown();
+            }
+          }
+          bob();
+        });
+      
+    </script>
+
+
+</body>

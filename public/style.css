@@ -164,6 +164,11 @@ input[type="text"]::placeholder {
     height: 350px;
 }
 
+.solidborder{
+    border-style: solid;
+    border: 5px, solid;
+}
+
 .flex-container-column {
     position: absolute;
     border-style: solid;
@@ -194,7 +199,7 @@ input[type="text"]::placeholder {
     display: flex;
     justify-content: space-evenly;
     padding: 8px;
-    flex-direction: row;
+    flex-direction: row !important;
 }
 
 .button {
