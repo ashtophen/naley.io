@@ -7,7 +7,7 @@
 </head>
 <body>
 <h1 style="margin: 10px">Music Party</h1>
-
+<div id="pregame">
 <h2> Welcome To The Lobby!</h2>
 <h2>NAME:</h2>
 <h2 id="playername"></h2>
@@ -54,7 +54,9 @@
 <div class="container">
 
 </div>
+</div>
 
+<div id="rounds" style="display: none;">a</div>
 
 <div class="chat">
 <ul id="messages"></ul>
@@ -62,6 +64,9 @@
     <input id="input" autocomplete="off" /><button class="send" ontouchstart="">Send</button>
 </form>
 </div>
+
+
+
 
 <script src="/socket.io/socket.io.js"></script>
 
@@ -198,6 +203,11 @@ const easle = document.getElementById('easle');
           }
 
         });
+  socket.on('gamestart', () => {
+    document.getElementById('pregame').style.display = "none";
+    document.getElementById('rounds').style.display = "block";
+  });
+  
   socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));
 </script>
 

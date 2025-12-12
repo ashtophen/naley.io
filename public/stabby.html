@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		#thirds {
+			display:grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 20px;
+			background-color: goldenrod;
+
+		}
+		.griditem {
+		background-color: rgb(33, 33, 74);
+		justify-items: center;
+		}
+		.upgrade {
+			background-color: grey;
+			border: none;
+			border-radius: 0px;
+			text-shadow: 4px;
+		}
+		.upgrade:hover{
+			background-color: rgb(155, 155, 155);
+			transform: scale(1);
+		}
+		.upgrade:active {
+			transform: scale(1);
+			background-color: rgb(92, 92, 92);
+		}
+	</style>
+</head>
+
+<body>
+<header style="position: absolute; top: 0; width: 100vw; height: fit-content; background-color: rgb(33, 33, 48);">
+<h1>Brownie Toucher</h1>
+</header>
+<div style="margin: 50px"></div>
+<div id="thirds">
+<div id="first" class="griditem">
+<div>Brownies: <span id="counter"></span></div>
+<button id="brownie" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="public/images/Brownie_transparent.png"></button>
+</div>
+<div id="second" class="griditem"></div>
+<div id="third" class="griditem">
+
+	<button class="upgrade"><div>
+		mom's oven
+		<p>adds one brownie per second</p>
+		</div>
+	</button>
+</div>
+</div>
+<footer style="width: 100vw; position: absolute; bottom: 0; background-color: rgb(33, 33, 48);">
+Ver 0.0.1
+</footer>
+<script>
+
+const counter = document.getElementById('counter');
+
+counter.innerText = 0;
+
+document.getElementById('brownie').onclick =  function() {counter.innerText ++;
+
+};
+</script>
+
+<script>
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
+</script>
+
+<script>
+const upgrades = document.querySelectorAll(".upgrade");
+
+upgrades.forEach(upgrade => {
+	upgrade.onclick = function() {
+		
+	};
+});
+</script>
+</body>

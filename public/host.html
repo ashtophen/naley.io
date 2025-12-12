@@ -14,8 +14,8 @@
 <div>Players:
 <div id="player-display" class="flexcontainer solidborder"></div>
 </div>
-<div style="justify-self: center;" id="start"></div>
-<div style="justify-self: center;" id="countdown"></div>
+<div style="justify-self: center; font-size: 5vh;" id="start"></div>
+<div style="justify-self: center; font-size: 20vh;" id="countdown"></div>
 
 <div class="chat">
     <ul id="messages"></ul>
@@ -23,8 +23,8 @@
     </div>
 </div>
 
-<div id="rounds">
-
+<div id="rounds" style="display: none;">
+<p>Congrats you started the game</p>
 </div>
 
 <div id="postgame">
@@ -58,8 +58,10 @@
         let countdownId;
         let timeLeft = 5;
         //countdown
-        function startCountdown() {
+    function startCountdown() {
     // Prevent multiple timers from running simultaneously
+    document.getElementById("countdown").style.visibility = "visible";
+    document.getElementById("countdown").textContent = timeLeft;
     if (countdownId) {
         clearInterval(countdownId);
     }
@@ -72,32 +74,43 @@
         if (timeLeft <= 0) {
             clearInterval(countdownId); // Stop the timer when it reaches zero
             timeLeft = 5; // Reset time for the next start
+            document.getElementById('pregame').style.display = "none";
+            document.getElementById('rounds').style.display = "block";
+            socket.emit('gamestart');
         }
     }, 1000);
-  }
+  };
         // stopit
         function stopCountdown() {
     if (countdownId) {
         clearInterval(countdownId); // Cancel the running interval
         countdownId = null; // Reset the ID after stopping
+        document.getElementById("countdown").style.visibility = "hidden";
         timeLeft = 5;
+
     }
-}
+  };
 
 
         //bob
+        const allgreen = players.every(player => {
+          player.style.backgroundColor === 'green';
+        });
         function bob(){
+          let ob = 0;
         players.forEach(player => {
           if(typeof player !== 'undefined'){   
-          if(player.style.backgroundColor !== 'green'){
+          if(player.style.backgroundColor === 'green'){
+              ob ++;
             document.getElementById('start').innerText = 'that is not very bob of you';
+
           }
-          else{
+          if(ob == players.length){
             document.getElementById('start').innerText = 'bob';
             startCountdown();
             return;
-          }
         }
+      }
         });
       };
 

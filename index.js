@@ -124,7 +124,9 @@ io.on('connection', async (socket) => {
         
     });
 	
-  
+    socket.on('gamestart', () => {
+      io.emit('gamestart');
+    });
     //ROOM HOSTING
     
 
