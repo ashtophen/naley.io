@@ -40,6 +40,7 @@ await db.exec(`
 `);
 var client_id = 'e3243c3ad9b349b09fe88cc642bcf43b';
 var redirect_uri = 'https://naley.io/musicparty';
+var myplayers = [];
 var started = false;
 const app = express();
 const server = createServer(app)
@@ -132,9 +133,12 @@ io.on('connection', async (socket) => {
       io.emit('gamestart');
     });
 
-    socket.on('playersUpdate', async (players) => {
+    socket.on('playersUpdate', async (players, callback) => {
+      myplayers = players;
       io.emit('playersUpdate', players);
-    })
+      console.log(players);
+      callback();
+    });
     //ROOM HOSTING
     
 
@@ -170,13 +174,14 @@ io.on('connection', async (socket) => {
                 });
         
                 });
-            });
+          });
+          if (started){
+            socket.emit('gamestart');
+          }
+          socket.emit('playersUpdate', myplayers);
           // add ready status catch.
       } catch (e) {
         // something went wrong
-      }
-      if (started){
-        socket.emit('gamestart');
       }
     }
   });

@@ -57,7 +57,8 @@
         const user = document.getElementById("playername");
         const pfp = document.getElementById('pfp');
         const playerdisplay = document.getElementById('player-display');
-        const players = [];
+        var players = [];
+        var playerinfo = [];
         //pregame timer
         let countdownId;
         let timeLeft = 5;
@@ -83,6 +84,8 @@
             document.getElementById('pregame').style.display = "none";
             document.getElementById('rounds').style.display = "block";
             playerdisplay.style.position = "absolute";
+            //playerdisplay.style.left = "50%";
+            //playerdisplay.style.transform = "translate(0, -50%)"
             playerdisplay.style.bottom = "5px";
             playerdisplay.style.width = "90vw";
             socket.emit('gamestart');
@@ -179,7 +182,7 @@
       
     </script>
     <script src="/public/scripts/spotifywebsdk.js"></script>
-    <scrtipt src="public/scripts/game.js"></scrtipt>
+    <script src="/public/scripts/game.js"></script>
 
 
 </body>

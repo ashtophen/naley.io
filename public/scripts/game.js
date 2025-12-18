@@ -1,22 +1,37 @@
 const roundCounter = document.getElementById('round');
 const questionDisplay = document.getElementById('question');
-var players = [];
-socket.on('playersUpdate', (newplayers) => {
-    players = newplayers;
+var currRound = 1;
+allSubmitted = false;
+socket.on('playersUpdate', (playersall) => {
+    console.log(playersall);
+    playerinfo = playersall;
 })
 
 socket.on('gamestart', () => {
-    roundCounter.innerText = 'Round 1';
+    roundCounter.innerText = `Round ${currRound}`;
     questionDisplay.innerText;
 
 });
+
+if(allSubmitted){
+    currRound ++;
+    socket.emit('roundchange', currRound);
+    allSubmitted = false;
+}
 
 socket.on('answersubmit', () => {
 
 });
 
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(M)
+function randomItem(array, arraylength){
+	let randIndex = Math.floor(Math.random() * arraylength);
+	return array[randIndex];
+}
+
+//question logic
+
+function getQuestion(){
+    var randPlayerTop = randomItem(playerinfo, playerinfo.length);
+    console.log(randPlayerTop);
+    return JSON.parse(randPlayerTop.spotifyinfo)[0].id;
 }
