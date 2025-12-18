@@ -8,9 +8,10 @@ import { open } from 'sqlite';
 import * as crypto from 'node:crypto';
 import { stringify } from 'node:querystring';
 import { createReadStream, fsync, readFile, readFileSync, readdir, readdirSync, rmSync, statSync, unlink, unlinkSync, writeFileSync } from 'node:fs';
+import 'dotenv/config';
+//My Functions And Etc.
 
 // add the crypto module for UUID
-
 let uuid = crypto.randomUUID();
 
 // open the database file
@@ -37,6 +38,9 @@ await db.exec(`
 		color TEXT
     );
 `);
+var client_id = 'e3243c3ad9b349b09fe88cc642bcf43b';
+var redirect_uri = 'https://naley.io/musicparty';
+var started = false;
 const app = express();
 const server = createServer(app)
 const io = new Server(server, {
@@ -48,8 +52,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use('/public', express.static(join(__dirname, 'public')));
 
-
-app.get('/', (req, res) => {
+ app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'index.html'));
 });
 
@@ -125,6 +128,7 @@ io.on('connection', async (socket) => {
     });
 	
     socket.on('gamestart', () => {
+      started = true;
       io.emit('gamestart');
     });
     //ROOM HOSTING
@@ -166,6 +170,9 @@ io.on('connection', async (socket) => {
           // add ready status catch.
       } catch (e) {
         // something went wrong
+      }
+      if (started){
+        socket.emit('gamestart');
       }
     }
   });

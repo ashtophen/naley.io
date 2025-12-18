@@ -4,65 +4,74 @@
   <link rel="stylesheet" href="style.css">
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="public/scripts/script.js" type="module"></script>
 </head>
 <body>
-<div class="preloader"><h1>N<h1></div>
-<h1>Music Party</h1>
+    <div class="preloader"><h1>N<h1></div>
+    <h1>Music Party</h1>
 
-<form id="formname">
-    <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
-    <br>
-    <input type="text" id="user" maxlength="10">
-</form>
+    <form id="formname">
+        <label for="user">ENTER YOUR NAME TO CONTINUE!</label>
+        <br>
+        <input type="text" id="user" maxlength="10">
+    </form>
 
-<div class="flexcontainer-row" id="lobby-selection" style="visibility:hidden;">
-<div>
-Host A Game:
-<br>
-<button id="hostbtn" ontouchstart="">Host</button>
-</div>
+    <div class="flexcontainer-row" id="lobby-selection" style="visibility:hidden;">
+        <div>Host A Game:<br>
+            <button id="hostbtn" ontouchstart="">Host</button>
+        </div>
 
-<div>
-Join A Game:
-<br>
-<input type="text" id="lobby-code" maxlength="4">
-<br>
-<button id="joinbtn" ontouchstart="">Join</button>
-</div>
-</div>
+        <div>Join A Game:<br>
+            <input type="text" id="lobby-code" maxlength="4"><br>
+            <button id="joinbtn" ontouchstart="">Join</button>
+        </div>
+    </div>
+    <h1>Display your Spotify profile data</h1>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/public/scripts/preloading.js"></script>
-<script>
-    const socket = io();
+    <section id="profile">
+        <h2>Logged in as <span id="displayName"></span></h2>
+        <span id="avatar"></span>
+        <ul>
+            <li>User ID: <span id="id"></span></li>
+            <li>Email: <span id="email"></span></li>
+            <li>Spotify URI: <a id="uri" href="#"></a></li>
+            <li>Link: <a id="url" href="#"></a></li>
+            <li>Profile Image: <span id="imgUrl"></span></li>
+        </ul>
+    </section>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/public/scripts/preloading.js"></script>
+    <script>
+        const socket = io();
 
-user = document.getElementById("user");
-form = document.getElementById("formname");
-form.addEventListener('submit', (e) =>{
-e.preventDefault();
- if(user.value){
-    socket.emit('name', user.value);
-    socket.on('name', (clientname, clientid, fincol) => {
-        localStorage.setItem("user", clientname);
-        localStorage.setItem("uuid", clientid);
-		localStorage.setItem("color", fincol);
-        document.getElementById("lobby-selection").style.visibility = "visible";
-        window.location.replace("lobby.html");
+    user = document.getElementById("user");
+    form = document.getElementById("formname");
+    form.addEventListener('submit', (e) =>{
+    e.preventDefault();
+     if(user.value){
+        socket.emit('name', user.value);
+        socket.on('name', (clientname, clientid, fincol) => {
+            localStorage.setItem("user", clientname);
+            localStorage.setItem("uuid", clientid);
+    		localStorage.setItem("color", fincol);
+            document.getElementById("lobby-selection").style.visibility = "visible";
+            window.location.replace("lobby.html");
+        });
+     }
+     else(alert("You must have a name!"));
     });
- }
- else(alert("You must have a name!"));
-});
 
-hostbtn = document.getElementById('hostbtn');
-hostbtn.addEventListener('click', function() {
-    socket.emit('host');
+    hostbtn = document.getElementById('hostbtn');
+    hostbtn.addEventListener('click', function() {
+        socket.emit('host');
 
-});
+    });
 
-//socket.on('host')
+    //socket.on('host')
 
-</script>
+    </script>
 </body>
 
 </html>

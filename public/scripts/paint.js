@@ -59,11 +59,11 @@ function draw(e) {
 
 //event listener for differnt mouse actions
 canvas
-	.addEventListener('mousedown', startPosition);
+	.addEventListener('pointerdown', startPosition);
 canvas
-	.addEventListener('mouseup', endPosition);
+	.addEventListener('pointerup', endPosition);
 canvas
-	.addEventListener('mousemove', draw);
+	.addEventListener('pointermove', draw);
 clearCanvas
 	.addEventListener('click', () => {
 		ctx.clearRect(

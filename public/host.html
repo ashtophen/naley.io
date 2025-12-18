@@ -17,14 +17,18 @@
 <div style="justify-self: center; font-size: 5vh;" id="start"></div>
 <div style="justify-self: center; font-size: 20vh;" id="countdown"></div>
 
-<div class="chat">
+<div id="chatbox" class="chat">
     <ul id="messages"></ul>
     
     </div>
 </div>
 
 <div id="rounds" style="display: none;">
-<p>Congrats you started the game</p>
+  <h1 id="round">Round 1</h1>
+  <h1 id="question"></h1>
+  
+
+
 </div>
 
 <div id="postgame">
@@ -73,9 +77,14 @@
 
         if (timeLeft <= 0) {
             clearInterval(countdownId); // Stop the timer when it reaches zero
+            document.getElementById('rounds').append(playerdisplay, document.getElementById('chatbox'));
             timeLeft = 5; // Reset time for the next start
+            document.getElementById('chatbox').style.display = "none";
             document.getElementById('pregame').style.display = "none";
             document.getElementById('rounds').style.display = "block";
+            playerdisplay.style.position = "absolute";
+            playerdisplay.style.bottom = "5px";
+            playerdisplay.style.width = "90vw";
             socket.emit('gamestart');
         }
     }, 1000);
@@ -169,6 +178,8 @@
         });
       
     </script>
+    <script src="/public/scripts/spotifywebsdk.js"></script>
+    <scrtipt src="public/scripts/game.js"></scrtipt>
 
 
 </body>

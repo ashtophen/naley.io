@@ -56,7 +56,12 @@
 </div>
 </div>
 
-<div id="rounds" style="display: none;">a</div>
+<div id="rounds" style="display: none;">
+  <h1 id="round">Round 1</h1>
+  <div class="flexcontainer" id="player_select">
+
+  </div>
+</div>
 
 <div class="chat">
 <ul id="messages"></ul>
@@ -95,6 +100,7 @@ const messages = document.getElementById('messages');
 const user = document.getElementById("playername");
 const pfp = document.getElementById('pfp');
 const playerdisplay = document.getElementById('player-display');
+var players = [];
 //toggle photo/drawing variables
 const drawtoggle = document.getElementById('drawtoggle');
 const photoselect = document.getElementById('photoselect');
@@ -167,6 +173,15 @@ const easle = document.getElementById('easle');
           img.src=URL.createObjectURL(blob);
           playerdisplay.appendChild(item).appendChild(img);
         }
+        const player_select = document.getElementById('player_select');
+        const button = document.createElement('button')
+        if (!players.some(player => player.uuid === uuid)){
+            players.push({name: `${name}`, uuid: `${uuid}`, spotifyinfo: localStorage.getItem('topTracks')});
+            socket.emit('playersUpdate', players);
+        }
+        players.forEach(player => {
+          button.innerText = player.name;
+          player_select.appendChild(button)})
       });
 
       //ready button logic
@@ -215,6 +230,17 @@ const easle = document.getElementById('easle');
 
 <script>
 
+</script>
+
+<script>
+canvas.addEventListener('touchstart', function(event) {
+    event.preventDefault(); // This will work because passive is false
+}, { passive: false });
+</script>
+
+<script>
+
+  
 </script>
 
 </body>
