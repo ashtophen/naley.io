@@ -131,6 +131,10 @@ io.on('connection', async (socket) => {
       started = true;
       io.emit('gamestart');
     });
+
+    socket.on('playersUpdate', async (players) => {
+      io.emit('playersUpdate', players);
+    })
     //ROOM HOSTING
     
 
