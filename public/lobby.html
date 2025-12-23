@@ -58,7 +58,8 @@
 
 <div id="rounds" style="display: none;">
   <h1 id="round">Round 1</h1>
-  <div class="flexcontainer" id="player_select">
+  <div class="flexcontainer" id="choice_select">
+
 
   </div>
 </div>
@@ -173,15 +174,11 @@ const easle = document.getElementById('easle');
           img.src=URL.createObjectURL(blob);
           playerdisplay.appendChild(item).appendChild(img);
         }
-        const player_select = document.getElementById('player_select');
-        const button = document.createElement('button')
         if (!players.some(player => player.uuid === uuid)){
             players.push({name: `${name}`, uuid: `${uuid}`, spotifyinfo: localStorage.getItem('topTracks')});
             socket.emit('playersUpdate', players);
         }
-        players.forEach(player => {
-          button.innerText = player.name;
-          player_select.appendChild(button)})
+      
       });
 
       //ready button logic
@@ -221,6 +218,25 @@ const easle = document.getElementById('easle');
   socket.on('gamestart', () => {
     document.getElementById('pregame').style.display = "none";
     document.getElementById('rounds').style.display = "block";
+  });
+  socket.on('roundchange', (currRound) => {
+    document.getElementById('round').innerText = `round ${currRound}`;
+  });
+  socket.on('roundOptions', (options) => {
+    const choice_select = document.getElementById('choice_select');
+    choice_select.innerHTML = '';
+    options.forEach((option, i) => {
+      const button = document.createElement('button');
+      button.innerText = options[i];
+      button.id = `choice${i}`;
+      button.addEventListener('click', function() {
+        socket.emit('answerSubmit', options[i], localStorage.getItem('uuid'));
+        choice_select.innerHTML = '';
+      });
+      choice_select.appendChild(button);
+    });
+    
+
   });
   
   socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));

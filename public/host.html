@@ -16,6 +16,8 @@
 </div>
 <div style="justify-self: center; font-size: 5vh;" id="start"></div>
 <div style="justify-self: center; font-size: 20vh;" id="countdown"></div>
+<input type="checkbox" id="modeChange" name="modeChange" value="Mode">
+  <label for="modeChange">Check For Trivia Mode</label><br>
 
 <div id="chatbox" class="chat">
     <ul id="messages"></ul>
@@ -50,6 +52,7 @@
       });
 
         //variables for chat messaging
+        const isTrivia = document.getElementById("modeChange").checked;
         const form = document.getElementById('form');
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');

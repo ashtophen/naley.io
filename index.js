@@ -128,9 +128,22 @@ io.on('connection', async (socket) => {
         
     });
 	
-    socket.on('gamestart', () => {
+    socket.on('gamestart', (callback) => {
       started = true;
       io.emit('gamestart');
+      callback();
+    });
+    socket.on('roundchange', (currRound, callback) => {
+      io.emit('roundchange', currRound);
+      callback();
+    })
+    socket.on('roundOptions', async (options, callback) => {
+      io.emit('roundOptions', options);
+      callback();
+    });
+    socket.on('answerSubmit', async (answer, uuid, callback) => {
+      io.emit('answerSubmit', answer, uuid);
+      callback();
     });
 
     socket.on('playersUpdate', async (players, callback) => {
