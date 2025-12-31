@@ -19,6 +19,9 @@ socket.on('gamestart', () => {
     logic = getQuestions(isTrivia);
     questionDisplay.innerText = logic.question;
     socket.emit("roundOptions", logic.options);
+    players.forEach(player => {
+        player.style.backgroundColor = 'transparent';
+    })
 
 });
 
@@ -28,13 +31,18 @@ socket.on('answerSubmit', (answer, uuid) => {
     if (submittedPlayers.has(uuid)) return; 
     submittedPlayers.add(uuid);
     const scorer = playerinfo.find(p => p.uuid === uuid);
+        let toGreen = players.find(player => player.dataset.uuid == "_" + uuid);
+        toGreen.style.backgroundColor = "green";
     if (scorer && answer === logic.answer) {
         scorer.score += (1 * logic.difficulty);
     }
     if (submittedPlayers.size >= playercount){
         submittedPlayers.clear();
         currRound ++;
-        console.log("allsubmitted")
+        console.log("allsubmitted");
+            players.forEach(player => {
+        player.style.backgroundColor = 'transparent';
+        })
         socket.emit('roundchange', currRound);
         roundCounter.innerText = `Round ${currRound}`;
         logic = getQuestions(isTrivia);
@@ -114,7 +122,8 @@ function getQuestions(modeint){
             mode: ["songs"],
             difficulty: 1
 
-        }
+        },
+        
     ];
 
     

@@ -1,0 +1,36 @@
+.popup {
+    display: none; /* Initially hidden */
+    position: absolute; /* Positioned relative to the viewport (or a positioned ancestor) */
+    background-color: #333;
+    right: 0%;
+    transform: translate(0%, -50%);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    pointer-events: none; /* Allows mouse events to pass through the popup to the button */
+    z-index: 1000;
+    /* Add a slight offset so it doesn't immediately cover the cursor */
+    transform: translate(10px, 10px);
+}
+
+.upgrade {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+.upgrade-name{
+    grid-column: 1 / span 2;
+}
+
+.upgrade-cost{
+    text-align:left;
+    grid-row: 2
+}
+
+.amount-purchased{
+    float: right;
+    text-align: right;
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    font-size: 48px;
+}
