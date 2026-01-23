@@ -1,0 +1,25 @@
+body {
+    /* Hide the default cursor */
+    cursor: none; 
+    /* Ensure the body covers the full viewable area */
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.cursor-trail {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    pointer-events: none; /* Prevents the div from interfering with other elements */
+    transform: translate(-50%, -50%); /* Centers the div on the cursor position */
+    transition: transform 0.01s ease-out, opacity 0.9s ease-out; /* Smooth transition/fade */
+    opacity: 0.8;
+    z-index: 100;
+}
+
+#movable-element{
+    position:absolute;
+}

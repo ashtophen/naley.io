@@ -3,20 +3,23 @@
     {
       "name": "mom's oven",
       "description": "Your mom's old oven. Nothing too fancy, but it always makes the best brownies, so long as you know when to turn the pan and which rack to put it on.",
-      "base-cost": 100,
+      "baseCost": 100,
+      "baseAdd": 5,
       "multiplier": 1.1499
         
     },
     {
       "name": "mom",
       "description": "Who better to make moms brownies than mom herself? Not sure where the rest of them came from, but I'm not complaining. Love you mom <3",
-      "base-cost": 1000,
+      "baseCost": 1000,
+      "baseAdd": 25,
       "multiplier": 1.156
     },
     {
       "name": "extra hand",
       "description": "Everyone can use an extra hand. A little weird that your buying ONLY the hand instead of just asking for help, but who am I to judge?",
-      "base-cost": 1,
+      "baseCost": 10,
+      "baseAdd": 1,
       "multiplier": 1.15
     }
         ]

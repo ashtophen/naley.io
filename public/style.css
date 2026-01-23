@@ -41,6 +41,19 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+.modal{
+    z-index: 4;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    display: none;
+    background-color: rgba(120, 120, 120, 0.5);
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+}
+
 h1{
 	font-size: 5vh;
 	justify-self: center;
@@ -90,7 +103,7 @@ button {
 @media(hover:hover) {
     button:hover{
         background-color: darkcyan;
-        transform: scale(1.1);
+        scale: 1.1;
     }
 }
 
@@ -219,7 +232,7 @@ input[type="text"]::placeholder {
 
 .button:hover {
     background-color: darkcyan;
-    transform: scale(1.1);
+    scale: 1.1;
 }
 
 .button:active {
@@ -274,4 +287,20 @@ canvas {
     color: white;
     border: none;
     cursor: pointer;
+}
+
+.clickable-text{
+    background-color:transparent !important;
+    border: none !important;
+    scale: 1;
+    transition: scale .2s ease-in-out;
+}
+.clickable-text:hover{
+    scale: 1 !important;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.clickable-text:active{
+    scale: .8;
 }

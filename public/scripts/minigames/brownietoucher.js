@@ -26,12 +26,29 @@
   function getUpgradeCost(upgradeToFind) {
 
     const foundUpgrade  = data.find(upgrade => upgrade.name ===`${upgradeToFind}`);
-    if  (foundUpgrade) { return foundUpgrade.base-cost * amountPurchased.innerText;
+    if  (foundUpgrade) { return foundUpgrade.baseCost * foundUpgrade.multiplier; // Add amount purchased here later
     } else {
       return null;
   }
 }
 
+  function getUpgradeAdd(upgradeToFind){
+    const foundUpgrade  = data.find(upgrade => upgrade.name ===`${upgradeToFind}`);
+    if  (foundUpgrade) { return Math.ceil(foundUpgrade.baseAdd * foundUpgrade.multiplier); // Add amount purchased here later
+    } else {
+      return null;
+  } 
+  }
+
+  function tick(){
+    let bob = 0;
+    // counter.innerText = Number(counter.innerText) +
+    if(cps > 0){
+      
+      counter.innerText = (Math.ceil(bob + (cps / 10))).toFixed(1);
+      bob = (Math.ceil(bob + (cps / 10))).toFixed(1);
+    }
+  }
   function autoSave() {
     let fullString = "";
     console.log("autosaving...");

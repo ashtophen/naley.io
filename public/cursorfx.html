@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="fx.css">
+</head>
+<body>
+    <h1>DONT SHAKE THE BABY!</h1>
+    <div class="cursor-container">
+        <div class="cursor-trail"></div>
+        <div id="container">
+            <div id="movable-element"><img id="bob" src="images/1669126129newborn-baby.png"></div>
+        </div>
+    </div>
+    <script>
+        const cursorTrail = document.querySelector('.cursor-trail');
+
+// Listen for mouse movement events on the entire window or a specific container
+document.addEventListener('mousemove', (event) => {
+    const { clientX: x, clientY: y } = event;
+
+    // Use CSS transforms for smooth positioning and performance
+    cursorTrail.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+
+    // For a "trail" of multiple divs, you would dynamically create
+    // and remove elements here, adjusting their positions and opacity over time
+});
+
+    </script>
+    <script>
+        const movableElement = document.getElementById('movable-element');
+let isDragging = false;
+let offsetX, offsetY;
+
+movableElement.addEventListener('mousedown', (event) => {
+    isDragging = true;
+    // Calculate offset from mouse position to the element's top-left corner
+    offsetX = event.clientX - movableElement.getBoundingClientRect().left;
+    offsetY = event.clientY - movableElement.getBoundingClientRect().top;
+
+    // Prevent default browser drag image
+    event.preventDefault(); 
+});
+
+document.addEventListener('mousemove', (event) => {
+    if (isDragging) {
+        // Update element position based on current mouse position and original offset
+        movableElement.style.left = event.clientX - offsetX + 'px';
+        movableElement.style.top = event.clientY - offsetY + 'px';
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
+
+    </script>
+    <script>
+        function checkIfShaking(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+        console.error("Element not found");
+        return;
+    }
+
+    const historySize = 10; // Number of history points to keep
+    const positionHistory = [];
+    const shakeThreshold = 5; // Max pixel movement range for it to be considered 'shaking'
+
+    function trackPosition() {
+        // Get the current position using getBoundingClientRect()
+        const rect = element.getBoundingClientRect();
+        const currentPos = { x: rect.left, y: rect.top };
+
+        positionHistory.push(currentPos);
+
+        // Keep the history size limited
+        if (positionHistory.length > historySize) {
+            positionHistory.shift();
+        }
+
+        // Only analyze if we have enough history points
+        if (positionHistory.length === historySize) {
+            analyzeHistory();
+        }
+
+        requestAnimationFrame(trackPosition); // Continue tracking
+    }
+
+    function analyzeHistory() {
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+
+        // Find min/max values in the history
+        for (const pos of positionHistory) {
+            if (pos.x < minX) minX = pos.x;
+            if (pos.x > maxX) maxX = pos.x;
+            if (pos.y < minY) minY = pos.y;
+            if (pos.y > maxY) maxY = pos.y;
+        }
+
+        // Calculate the range of movement
+        const rangeX = maxX - minX;
+        const rangeY = maxY - minY;
+
+        // Check if movement in both axes is small enough to be "shaking"
+        if (rangeX <= shakeThreshold && rangeY <= shakeThreshold) {
+
+            console.log(`Element ${elementId} is shaking! RangeX: ${rangeX}, RangeY: ${rangeY}`);
+            // You can add further logic here (e.g., trigger an event, stop tracking, etc.)
+        } else {
+            console.log(`Element ${elementId} is moving normally. RangeX: ${rangeX}, RangeY: ${rangeY}`);
+        }
+    }
+
+    // Start tracking
+    requestAnimationFrame(trackPosition);
+}
+    checkIfShaking("movable-element");
+    </script>
+    <script src="scripts/fx/fx.js"></script>
+</body>
