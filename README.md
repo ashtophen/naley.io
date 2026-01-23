@@ -1,2 +1,2 @@
-# musicparty
-game to guess music with friends
+# naley.io
+My Personal Development Site
