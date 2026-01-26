@@ -24,7 +24,7 @@
   <form>
     <input type="file" id="pfp" name="pfpname" accept="image/*">
   </form>
-  <img id="pfpDisplay" src="public/images/oh_no.png" style="max-width: 126px; max-height: 10vh; padding: 10px;">
+  <img id="pfpDisplay" src="/images/oh_no.png" style="max-width: 126px; max-height: 10vh; padding: 10px;">
   <br>
 </div>
 <p>Or, Draw Your Picture!</p>
@@ -242,7 +242,7 @@ const easle = document.getElementById('easle');
   socket.emit('pfp update', 'filler', localStorage.getItem('uuid'));
 </script>
 
-<script src="public/scripts/paint.js"></script>
+<script src="/scripts/paint.js"></script>
 
 <script>
 

@@ -60,7 +60,7 @@
 	<br>
 	<br>
 	<br>
-<button id="brownie" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="public/images/Brownie_transparent.png"></button>
+<button id="brownie" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="/images/Brownie_transparent.png"></button>
 </div>
 <div id="second" class="griditem">
 	<div id="infoPopup" class="popup">
@@ -92,7 +92,7 @@ Ver 0.0.2a <button style="float: right;" class="clickable-text" id="changelog">c
 	<a class="button" href="/">Home</a>
 </div>
 </footer>
-<script src="public/scripts/minigames/brownietoucher.js"></script>
+<script src="/scripts/minigames/brownietoucher.js"></script>
 <script>
 
 const counter = document.getElementById('counter');
@@ -190,7 +190,7 @@ upgrades.forEach(upgrade => {
     document.getElementById(elementId).textContent = 'Failed to load content.';
   }
 }
-loadTextFile("./public/docs/brownietoucher/changes.md", "changes");
+loadTextFile("./docs/brownietoucher/changes.md", "changes");
 
 document.getElementById("changelog").onclick = function() {
 	document.getElementById("modal").style.display = "block";
