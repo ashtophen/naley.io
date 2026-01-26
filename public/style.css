@@ -199,6 +199,11 @@ input[type="text"]::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.flexcontainer > *{
+    flex-basis: 20%;
 }
 
 #player-display > div{
