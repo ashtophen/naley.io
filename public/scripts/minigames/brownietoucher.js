@@ -1,4 +1,5 @@
 
+let bob = 0;
  async function loadData() {
     try {
       const response = await fetch('./scripts/minigames/upgrades.json'); // Fetch the file
@@ -41,12 +42,11 @@
   }
 
   function tick(){
-    let bob = 0;
     // counter.innerText = Number(counter.innerText) +
     if(cps > 0){
       
-      counter.innerText = (Math.ceil(bob + (cps / 10))).toFixed(1);
-      bob = (Math.ceil(bob + (cps / 10))).toFixed(1);
+      counter.innerText = (Math.ceil(bob + (cps / 10)));
+      bob = (Math.ceil(bob + (cps / 10)));
     }
   }
   function autoSave() {

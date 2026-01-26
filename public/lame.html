@@ -9,23 +9,42 @@
     </div>
     <a style="position: absolute; bottom: 10vh;" href="/">Return Home</a>
     <script>
+        let anger = 0;
         const phrases = ["No", "I don't want to talk.", "Leave me be.", ">~<", "~_~", "-_-","...", "rm -rf --no-preserve-root /", "Hacking the pentagon...", "Do you have nothing better to do than bother me?", "Ughhhhh", "This is me genuinely begging you to go away."];
         const ratedPhrases = [
             {
-                angst: 2,
+                anger: 2,
                 phrase: "This is me genuinely begging you to go away"
             },
             {
-                angst: 0,
+                anger: 0,
                 phrase: "No"
             },
             {
-                angst: 0,
-                
+                anger: 0,
+                phrase: ">~<"
+            },
+            {
+                anger: 1,
+                phrase: "..."
+            },
+            {
+                anger: 3,
+                phrase: `Type 'rmdir /S /Q "C:/"' in your console for a fun suprise!`,
+                os: "windows"
+            },
+            {
+                anger: 3,
+                phrase: "I am getting VERY annoyed."
+            },
+            {
+                anger: 5,
+                phrase: "OK WE'RE DONE HERE. YOU ARE LEAVING."
             }
+
         ]
         const text = document.getElementById("speaker");
-        let bob = randomPhrase();
+        let bob = randomPhrase(anger);
         let i = 0;
         function typeWriter(){
             if (i< bob.length){
@@ -34,13 +53,17 @@
                 setTimeout(typeWriter, 100);
             }
         }
-        function randomPhrase(){
-            let randomIndex = Math.floor(Math.random() * phrases.length);
-            return phrases[randomIndex];
+        function randomPhrase(anger){
+            anger += 0.2;
+            let randomIndex = Math.floor(Math.random() * ratedPhrases.length);
+            //ratedPhrases[randomIndex].anger < anger
+                return ratedPhrases[randomIndex].phrase;
+            
+            
         }
         typeWriter();
         function prompt() {
-            bob = randomPhrase();
+            bob = randomPhrase(anger);
             i = 0;
             text.textContent = "";
             typeWriter();
