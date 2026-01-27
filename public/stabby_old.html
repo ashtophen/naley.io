@@ -46,7 +46,7 @@
 		</div>
 		</div>
 	</div>
-<header style="position: absolute; top: 0; width: 100vw; height: fit-content; background-color: rgb(33, 33, 48);">
+<header style=" top: 0; width: 100vw; height: fit-content; background-color: rgb(33, 33, 48);">
 <h1>Brownie Toucher</h1>
 </header>
 <div style="margin: 50px"></div>
@@ -118,7 +118,6 @@ document.getElementById('brownie').onclick =  function(event) {
     });
 </script>
 
-<script src="./scripts/minigames/brownietoucher.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 <script>
 
@@ -130,7 +129,7 @@ if (data.length === 0){
 	loadData();
 }
 
-const updateUI = setInterval(tick, 100); // BRO DONT DO THIS BRO
+const updateUI = setInterval(tick, 1000); // BRO DONT DO THIS BRO
 
 upgrades.forEach(upgrade => {
 	const popup = document.getElementById("infoPopup");

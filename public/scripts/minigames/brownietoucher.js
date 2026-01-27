@@ -35,7 +35,7 @@ let bob = 0;
 
   function getUpgradeAdd(upgradeToFind){
     const foundUpgrade  = data.find(upgrade => upgrade.name ===`${upgradeToFind}`);
-    if  (foundUpgrade) { return Math.ceil(foundUpgrade.baseAdd * foundUpgrade.multiplier); // Add amount purchased here later
+    if  (foundUpgrade) { return Math.floor(foundUpgrade.baseAdd * foundUpgrade.multiplier); // Add amount purchased here later
     } else {
       return null;
   } 
@@ -45,8 +45,9 @@ let bob = 0;
     // counter.innerText = Number(counter.innerText) +
     if(cps > 0){
       
-      counter.innerText = (Math.ceil(bob + (cps / 10)));
-      bob = (Math.ceil(bob + (cps / 10)));
+      counter.innerText = Number(counter.innerText) + (bob + (cps));
+      totalBrownies += (bob + (cps));
+      //bob = (Math.ceil(bob + (cps / 10)));
     }
   }
   function autoSave() {

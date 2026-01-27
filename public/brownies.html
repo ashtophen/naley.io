@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="brownietoucher.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<div class="modal" id="modal">
+		<button class="clickable-text" id="modal-exit" style="text-decoration: none !important; float: right;">[X]</button>
+		<div class="flexcontainer-row">
+		<div class="container" style="width: 80vw; height:80vh; max-width: 600px; text-align: center; background-color: rgb(73, 73, 73); justify-self: center; align-self: center; z-index: 5;">
+		<div id="changes" style="text-align:start; margin: 8px"></div>
+		<p></p>
+		</div>
+		</div>
+	</div>
+<header style=" top: 0; width: 100vw; height: fit-content; background-color: rgb(33, 33, 48);">
+<h1>Brownie Toucher</h1>
+</header>
+
+<div id="thirds">
+<div id="first" class="griditem">
+	<br>
+	<br>
+<div style="font-size: xx-large;">Brownies: <span id="counter"></span><br>BPS: <span id="bps"></span></div>
+	<br>
+	<br>
+	<br>
+	<br>
+<button id="brownie" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="/images/Brownie_transparent.png"></button>
+</div>
+<div id="second" class="griditem">
+	<div id="infoPopup" class="popup">
+		<div></div>
+	This info box tracks your cursor!
+</div></div>
+
+<div id="third" class="griditem">
+	<button class="upgrade">
+		<p class="upgrade-name">extra hand</p>
+		<p class="upgrade-cost">1</p>
+		<p class="amount-purchased"></p>
+	</button>
+	<button class="upgrade">
+		<p class="upgrade-name">mom's oven</p>
+		<p class="upgrade-cost">100</p>
+		<p style="float:right;"class="amount-purchased"></p>
+	</button>
+	<button class="upgrade">
+		<p class="upgrade-name">mom</p>
+		<p class="upgrade-cost">1000</p>
+		<p style="float:right;"class="amount-purchased"></p>
+	</button>
+</div>
+</div>
+<footer style="width: 100vw; position: absolute; bottom: 0; background-color: rgb(33, 33, 48); font-size: 28px;">
+Ver 0.0.3a <button style="float: right;" class="clickable-text" id="changelog">changelog</button>
+<div class="flexcontainer-row">
+	<a class="button" href="/">Home</a>
+</div>
+</footer>
+<script src="scripts/minigames/brownietoucher.js"></script>
+<script>
+    const upgrades = document.getElementsByClassName("upgrade");
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
+<script>
+    //Loading, Formatting, and Displaying changelog
+	async function loadTextFile(filePath, elementId) {
+  try {
+    const response = await fetch(filePath);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const text = await response.text();
+    // Use .textContent to prevent HTML interpretation of the text file content
+    document.getElementById(elementId).innerHTML = marked.parse(text);
+  } catch (error) {
+    console.error('Error fetching the file:', error);
+    document.getElementById(elementId).textContent = 'Failed to load content.';
+  }
+}
+loadTextFile("./docs/brownietoucher/changes.md", "changes");
+
+document.getElementById("changelog").onclick = function() {
+	document.getElementById("modal").style.display = "block";
+}
+document.getElementById("modal-exit").onclick = function() {
+	document.getElementById("modal").style.display = "none";
+}
+document.getElementById("modal").onclick = function(event) {
+	if (event.target === event.currentTarget){
+	document.getElementById("modal").style.display = "none";}
+}
+</script>

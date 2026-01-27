@@ -1,5 +1,11 @@
 # BrownieToucher ChangeLog
 
+## Ver 0.0.3a
+
+### Update Release 26/1/2026
+
+- fixed the counter just not working at all.
+
 ## Ver 0.0.2a 
 
 ### Update Release 22/1/2026

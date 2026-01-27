@@ -34,3 +34,29 @@
     grid-row: 1 / span 2;
     font-size: 48px;
 }
+#thirds {
+	display:grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
+	background-color: goldenrod;
+}
+.griditem {
+position: relative;
+background-color: rgb(33, 33, 74);
+justify-items: center;
+}
+.upgrade {
+	background-color: grey;
+	width: 100%;
+	border: none;
+	border-radius: 0px;
+	text-shadow: 4px;
+}
+.upgrade:hover{
+	background-color: rgb(155, 155, 155);
+	transform: scale(1);
+}
+.upgrade:active {
+	transform: scale(1);
+	background-color: rgb(92, 92, 92);
+}
