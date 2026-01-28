@@ -51,10 +51,12 @@ justify-items: center;
 	border: none;
 	border-radius: 0px;
 	text-shadow: 4px;
+    transition: all 0.3s ease-out;
 }
 .upgrade:hover{
 	background-color: rgb(155, 155, 155);
 	transform: scale(1);
+    transition-duration: 0.1s;
 }
 .upgrade:active {
 	transform: scale(1);

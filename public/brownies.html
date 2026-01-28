@@ -33,7 +33,7 @@
 	<br>
 	<br>
 	<br>
-<button id="brownie" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="/images/Brownie_transparent.png"></button>
+<button id="brownie" onclick="clickBrownie(event)" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="/images/Brownie_transparent.png"></button>
 </div>
 <div id="second" class="griditem">
 	<div id="infoPopup" class="popup">
@@ -66,9 +66,6 @@ Ver 0.0.3a <button style="float: right;" class="clickable-text" id="changelog">c
 </div>
 </footer>
 <script src="scripts/minigames/brownietoucher.js"></script>
-<script>
-    const upgrades = document.getElementsByClassName("upgrade");
-</script>
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 <script>
     //Loading, Formatting, and Displaying changelog
@@ -98,4 +95,12 @@ document.getElementById("modal").onclick = function(event) {
 	if (event.target === event.currentTarget){
 	document.getElementById("modal").style.display = "none";}
 }
+</script>
+<script>
+	
+</script>
+<script>
+    document.addEventListener('gesturestart', function (e) {
+        e.preventDefault();
+    });
 </script>
