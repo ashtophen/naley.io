@@ -1,12 +1,17 @@
+//const { json } = require("stream/consumers");
 
 let cps = 0; //clicks per second
-let bps = 0; //brownies per second (NOT INCLUDING CLICKS)
+let fractionalCounter = 0; // this is the true counter.
 let purchaseAmount = 1;
 let lifetimeTotal = 0; //total number of brownies ever earned
 let clickAdd = 1; //amount of brownies a single click adds (This is self explanatory why did I even add a description to this, like come on man figure it out.)
-const counter = document.getElementById("counter");
+const counter = document.getElementById("counter"); // this counter displays whole numbers only
 const upgrades = document.querySelectorAll(".upgrade");
+let counterNum;
 var data = [];
+//tick variables
+let bps = 0; //brownies per second (NOT INCLUDING CLICKS)
+let lastTimestamp = 0; // used to set as timestamp
 data = loadData();
 
  async function loadData() {
@@ -49,36 +54,68 @@ data = loadData();
       return null;
   } 
   }
+  //num is to be added
+  function addBrownies(num){
+    fractionalCounter += num;
+    lifetimeTotal += num;
+    console.log(fractionalCounter);
+  }
+  //num is to be subtracted
+  function subtractBrownies(num){
+    fractionalCounter -= num;
+    lifetimeTotal -= num;
+  }
 
-  function tick(){
-    // counter.innerText = Number(counter.innerText) +
-    if(bps > 0){
-      
+  function tick(timestamp) {
+    if (!lastTimestamp) lastTimestamp = timestamp;
+    counterNum = Number(counter.innerText); // updating counter Num every frame here.
+    const deltaTime = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+      fractionalCounter += (bps * deltaTime) / 1000;
+
+      counter.innerText = Math.floor(fractionalCounter);
+    
+    requestAnimationFrame(tick);
+  }
+    //My old way of doing it, adds the total bps once a second.
+    /*if(bps > 0){
       counter.innerText = Number(counter.innerText) + (bps);
       lifetimeTotal += (bps);
-      //bob = (Math.ceil(bob + (cps / 10)));
-    }
-  }
+      document.getElementById("title").innerText = counter.innerText + " Brownies";
+    }*/
+
   function autoSave() {
-    let fullString = "";
     console.log("autosaving...");
-    upgrades.forEach(upgrade => {
-      const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
-      fullString = fullString.concat(amountPurchased.innerText, ",");
-      if (fullString[fullString.length-1] === ","){
-        fullString = fullString.slice(0, -1);
+    let saveInfo = [];
+    // Convert NodeList to Array, map to innerText values, and join with commas
+    // Yes this method usage is kinda disgusting and I did get it from AI I ADMIT IT.
+    let fullPurchases = Array.from(upgrades)
+        .map(upgrade => upgrade.getElementsByClassName("amount-purchased")[0].innerText)
+        .join(",");
+      if(fullPurchases.endsWith(",")){fullPurchases = fullPurchases.slice(0, -1);}
+    saveInfo = [
+      {
+        purchases: fullPurchases,
+        lifetimeTotal: lifetimeTotal
       }
-      console.log(fullString);
-    });
+    ]
+    localStorage.setItem("saveData", JSON.stringify(saveInfo));
+    console.log(fullPurchases); 
+}
+  function loadSave(){
+    if (localStorage.getItem("saveData") === null){return};
+    let saveData = JSON.parse(localStorage.getItem("saveData"));
+    return saveData.purchases;
   }
-  
+
+
   function clickBrownie(event){
     const clickX = event.clientX;
 	  const clickY = event.clientY;
 	  const brownieImg = document.createElement('img');
 	  const amountDisp = document.createElement('div');
 	
-	 counter.innerText = Math.floor(Number(counter.innerText) + clickAdd);
+	 addBrownies(clickAdd);
 
 	  lifetimeTotal += clickAdd;
   }
@@ -102,7 +139,7 @@ upgrades.forEach(upgrade => {
 	}, 100);
 	upgrade.onclick = function() {
 		if (Number(counter.innerText) >= Number(upgradeCost.innerText) * purchaseAmount){
-			counter.innerText = Math.ceil((Number(counter.innerText) - (Number(upgradeCost.innerText) * purchaseAmount)));
+			subtractBrownies(Number(upgradeCost.innerText) * purchaseAmount);
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){
 				bps += getUpgradeAdd(upgradeName.innerText);
@@ -128,6 +165,4 @@ upgrades.forEach(upgrade => {
      popup.style.top = `${event.clientY - 60}px`;
 });
 });
-setInterval(() => {
-  tick();
-}, 1000);
+requestAnimationFrame(tick);
