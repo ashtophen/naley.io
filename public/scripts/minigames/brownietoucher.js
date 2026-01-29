@@ -63,7 +63,6 @@ data = loadData();
   //num is to be subtracted
   function subtractBrownies(num){
     fractionalCounter -= num;
-    lifetimeTotal -= num;
   }
 
   function tick(timestamp) {
@@ -87,25 +86,42 @@ data = loadData();
   function autoSave() {
     console.log("autosaving...");
     let saveInfo = [];
-    // Convert NodeList to Array, map to innerText values, and join with commas
-    // Yes this method usage is kinda disgusting and I did get it from AI I ADMIT IT.
-    let fullPurchases = Array.from(upgrades)
-        .map(upgrade => upgrade.getElementsByClassName("amount-purchased")[0].innerText)
-        .join(",");
-      if(fullPurchases.endsWith(",")){fullPurchases = fullPurchases.slice(0, -1);}
-    saveInfo = [
+    let fullPurchases = Array.from(upgrades).map(upgrade => {
+      return {
+          // Get the specific text from child elements
+          amount: upgrade.querySelector(".amount-purchased").innerText.trim(),
+          name: upgrade.querySelector(".upgrade-name")?.innerText || "Unknown",
+          cost: upgrade.querySelector(".upgrade-cost")?.innerText
+      };
+  });
+    saveInfo = 
       {
-        purchases: fullPurchases,
-        lifetimeTotal: lifetimeTotal
+        bps: bps,
+        fullPurchases: fullPurchases,
+        lifetimeTotal: lifetimeTotal,
+        fractionalCounter: fractionalCounter
       }
-    ]
     localStorage.setItem("saveData", JSON.stringify(saveInfo));
-    console.log(fullPurchases); 
+    console.log((fullPurchases)); 
 }
   function loadSave(){
+    let i = 0;
     if (localStorage.getItem("saveData") === null){return};
     let saveData = JSON.parse(localStorage.getItem("saveData"));
-    return saveData.purchases;
+    bps = saveData.bps;
+    lifetimeTotal = saveData.lifetimeTotal;
+    fractionalCounter = saveData.fractionalCounter;
+    upgrades.forEach(upgrade => {
+      const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
+	    const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
+	    const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
+      amountPurchased.innerText = saveData.fullPurchases[i].amount;
+      upgradeCost.innerText = saveData.fullPurchases[i].cost;
+
+      i++;
+
+    })
+    return saveData;
   }
 
 
@@ -116,11 +132,14 @@ data = loadData();
 	  const amountDisp = document.createElement('div');
 	
 	 addBrownies(clickAdd);
-
-	  lifetimeTotal += clickAdd;
   }
 
-
+  function gameStart(){
+    if (localStorage.getItem("saveData")){
+      loadSave();
+    }
+    requestAnimationFrame(tick);
+  }
 
 
 upgrades.forEach(upgrade => {
@@ -165,4 +184,8 @@ upgrades.forEach(upgrade => {
      popup.style.top = `${event.clientY - 60}px`;
 });
 });
-requestAnimationFrame(tick);
+
+document.addEventListener("DOMContentLoaded", (event) => {
+  gameStart();
+  setInterval(autoSave, 60000);
+});
