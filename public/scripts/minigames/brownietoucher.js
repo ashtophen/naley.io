@@ -71,7 +71,7 @@ data = loadData();
     const deltaTime = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
       fractionalCounter += (bps * deltaTime) / 1000;
-
+      lifetimeTotal += (bps * deltaTime) / 1000;
       counter.innerText = Math.floor(fractionalCounter);
     
     requestAnimationFrame(tick);
@@ -116,6 +116,7 @@ data = loadData();
 	    const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
 	    const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
       amountPurchased.innerText = saveData.fullPurchases[i].amount;
+      upgradeName.innerText = saveData.fullPurchases[i].name;
       upgradeCost.innerText = saveData.fullPurchases[i].cost;
 
       i++;
