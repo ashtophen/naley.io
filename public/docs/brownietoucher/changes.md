@@ -1,5 +1,16 @@
 # BrownieToucher ChangeLog
 
+## Ver 0.0.4a
+
+### Update Release 28/1/2026
+
+### Added Features:
+
+- Counter now adds incrementally instead of all at once
+- Higher Precision Counting!
+- Auto saves every 60s.
+- Loads Save from localStorage on load.
+
 ## Ver 0.0.3a
 
 ### Update Release 26/1/2026
