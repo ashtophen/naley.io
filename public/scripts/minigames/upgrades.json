@@ -21,5 +21,16 @@
       "baseCost": 10,
       "baseAdd": 1,
       "multiplier": 1.15
+    },
+    {
+      "name":  "GOD",
+      "description": "That's right, capital G God has descended from the heavens, drawn by your simply divine brownies.",
+      "baseCost": 99999999999999999999999999999999999,
+      "baseAdd": 99999999999999,
+      "multiplier": 9999999999999999999999999999999999999999999999
+    },
+    {
+
+
     }
         ]

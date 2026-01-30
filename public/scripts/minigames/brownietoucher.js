@@ -72,7 +72,8 @@ data = loadData();
     lastTimestamp = timestamp;
       fractionalCounter += (bps * deltaTime) / 1000;
       lifetimeTotal += (bps * deltaTime) / 1000;
-      counter.innerText = Math.floor(fractionalCounter);
+      counter.innerText = Math.floor(fractionalCounter).toLocaleString();
+      document.getElementById("bps").innerText = bps;
     
     requestAnimationFrame(tick);
   }
@@ -158,7 +159,7 @@ upgrades.forEach(upgrade => {
 	} else {upgradeName.innerText = hiddenText;}
 	}, 100);
 	upgrade.onclick = function() {
-		if (Number(counter.innerText) >= Number(upgradeCost.innerText) * purchaseAmount){
+		if (fractionalCounter >= Number(upgradeCost.innerText) * purchaseAmount){
 			subtractBrownies(Number(upgradeCost.innerText) * purchaseAmount);
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){

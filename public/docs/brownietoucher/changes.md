@@ -1,5 +1,24 @@
 # BrownieToucher ChangeLog
 
+
+## Ver 0.0.5a
+
+## Update Release
+
+### Added Features:
+
+- Counter number is formatted to locale.
+- Bps is now Displayed!
+
+
+### Fixed Bugs:
+
+- Game is displayed filling the full page now.
+
+### Known Bugs:
+
+- None! Either I'm the pinnacle of coding, or I just don't know where the bugs are yet.
+
 ## Ver 0.0.4a
 
 ### Update Release 28/1/2026

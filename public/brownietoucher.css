@@ -34,11 +34,20 @@
     grid-row: 1 / span 2;
     font-size: 48px;
 }
+
+#game{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    
+}
+
 #thirds {
 	display:grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 20px;
 	background-color: goldenrod;
+    height: 100%;
 }
 .griditem {
 position: relative;
