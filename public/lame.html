@@ -5,10 +5,11 @@
 <body>
     <div style="height: 90vh; display: flex; gap: 10px; flex-direction: column; justify-content: center; align-content: center;"class="flexcontainer-row">
         <div style="align-self: center;"id="speaker"></div>
-        <button style="width: 20vw; align-self: center;"onclick="prompt()">Prompt</button>
+        <button id="promptbtn" style="width: 20vw; align-self: center;"onclick="prompt()">Prompt</button>
     </div>
     <a style="position: absolute; bottom: 10vh;" href="/">Return Home</a>
     <script>
+        const promptBtn = document.getElementById("promptbtn");
         let anger = 0;
         const phrases = ["No", "I don't want to talk.", "Leave me be.", ">~<", "~_~", "-_-","...", "rm -rf --no-preserve-root /", "Hacking the pentagon...", "Do you have nothing better to do than bother me?", "Ughhhhh", "This is me genuinely begging you to go away."];
         const ratedPhrases = [
@@ -44,7 +45,7 @@
 
         ]
         const text = document.getElementById("speaker");
-        let bob = randomPhrase(anger);
+        let bob = randomPhrase();
         let i = 0;
         function typeWriter(){
             if (i< bob.length){
@@ -52,12 +53,23 @@
                 i++;
                 setTimeout(typeWriter, 100);
             }
+            if (bob == "OK WE'RE DONE HERE. YOU ARE LEAVING."){
+                promptBtn.style.display = "none";
+                if(i >= bob.length){
+                    setTimeout(location.href = "/", 800);
+                }
+            }
         }
-        function randomPhrase(anger){
+        function randomPhrase(){
             anger += 0.2;
-            let randomIndex = Math.floor(Math.random() * ratedPhrases.length);
+            console.log(anger);
+            const availablePhrases = ratedPhrases.filter(phrase => {
+                return phrase.anger <= anger;
+            })
+            let randomIndex = Math.floor(Math.random() * availablePhrases.length);
             //ratedPhrases[randomIndex].anger < anger
-                return ratedPhrases[randomIndex].phrase;
+            
+                return availablePhrases[randomIndex].phrase;
             
             
         }
