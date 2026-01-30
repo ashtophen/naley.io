@@ -54,7 +54,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 app.use('/public', express.static(join(__dirname, 'public')));
 
  app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
+  res.sendFile(join(__dirname, '/public/index.html'));
 });
 
 app.get('/style.css', (req, res) => {
