@@ -1,0 +1,33 @@
+html{
+    background-color: rgb(50, 50, 50);
+    color: whitesmoke;
+}
+
+body{
+    margin: 0;
+}
+
+#gridcontainer{
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+}
+
+.flexcontainer-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.flexcontainer-row > div{
+    text-align: center;
+    padding: 20px;
+    flex: 1 1 0px;
+}
+
+footer{
+    height: fit-content;
+    justify-self: center;
+}

@@ -309,3 +309,36 @@ canvas {
 .clickable-text:active{
     scale: .8;
 }
+
+.dropdown{
+    display: grid;
+    grid-template-rows: 0fr;
+    width: fit-content;
+    overflow: hidden;
+}
+
+#contactcontainer{
+    justify-self: center;
+    align-self: center;
+    max-height: 0;
+}
+
+#contactinfo{
+    margin: 12px;
+    font-size: x-large;
+}
+
+@keyframes dropdownexpand{
+    0% {grid-template-rows: 0fr; max-height: 0;}
+    100% {grid-template-rows: 1fr; max-height: 500px;}
+
+}
+
+.expand{
+    animation: dropdownexpand 1s linear forwards;
+}
+
+.retract{
+    animation: dropdownexpand 1s linear reverse;
+    animation-delay: 0s;
+}
