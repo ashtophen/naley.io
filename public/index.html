@@ -16,17 +16,20 @@
 
 </header>
 
-<body>
+<body style="overflow: hidden;">
 <div class="preloader"><h1>N<h1></div>
     <div id="consentmodal" class="modal">
 
     </div>
-
+    <div id="notecardmodal" class="modal" style="z-index: 5;">
+        <div style="position: absolute; top: 20%; transform: translate(-50%, 50%); left:50%; font-size: xx-large;">Write Your Suggestion!</div>
+    </div>
+<div class="bodycontainer" style="display: flex; height: 100vh; flex-direction: column; flex-basis: auto;;">
 <div style="height: 10vh">
 
 </div>
 
-
+<div class="maincontent" style="height:max-content; flex-basis: 100%;">
 <div>
     <p style="font-size: xx-large;">Projects!</p>
 </div>
@@ -38,10 +41,17 @@
     <!-- <a class="button" href="about"></a> -->
   <!--  <a class="button" href="/converter.html">File Conversion</a> -->
 </div>
-
 <div><p></p></div>
-<div></div>
-<footer style="position:absolute; bottom:0; width: 100vw; height: fit-content;  background-color: rgb(33, 33, 48);">
+</div>
+<div class="suggestions" style="margin-top: auto; margin-right: 8px; z-index: 3;">
+    <div style="">
+        <div id="suggestion-box" style="width: fit-content; justify-self: right; z-index: 2;">
+            <img style="height: 200px;"src="./images/1714905519Cardboard-box-empty-box.png">
+            <h2>Suggestion Box</h2>
+        </div>
+    </div>
+</div>
+<footer style="bottom:0; width: 100vw; height: fit-content;  background-color: rgb(33, 33, 48);">
     <p style="width: 100vw; background-color: rgb(33, 33, 74);">By using Naley.io and its services you agree to have read and accepted our&nbsp<a href="https://naley.io/privacy-policy">Privacy Policy</a>, <a href="/terms-of-use">Terms Of Use</a>, and <a href="/cookieconsentpolicy.html">Cookie Consent Policy</a>.</p>
     <div class="flexcontainer-row">
         <a class="button" href="http://kanboard.naley.io/?controller=BoardViewController&action=readonly&token=ed3d533403c5a3612b8b537956772e0b3afe937a0d4e4e8297ece2152aa8" target="_blank">Project Tracker</a>
@@ -49,11 +59,17 @@
         <a class="button" href="https://discord.com/invite/dU57VBg9sb" target="_blank">Discord</a>
     </div>
 </footer>
-
+</div>
+<div id="notecard">
+    <textarea style="position: absolute; top:30%;font-size: xx-large; background-color: transparent; resize: none; border: none; outline: none;" rows="10" cols="40"></textarea>
+    <img src="./images/index-card.png">
+</div>
+<button id="suggestion-submit" class="button" style="position: absolute; bottom: 20%; left: 50%; transform: translate(-50%, -50%); z-index: 99; display: none;">Submit</button>
 
 
 <script src=/scripts/preloading.js></script>
 <script>
 </script>
 <script src="/scripts/compliance/accept.js"></script>
+<script src="./scripts/suggestions.js"></script>
 </body>

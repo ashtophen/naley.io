@@ -342,3 +342,42 @@ canvas {
     animation: dropdownexpand 1s linear reverse;
     animation-delay: 0s;
 }
+
+#notecard{
+    position: absolute;
+    z-index: 5;
+    top: 80vh;
+    left: 60vw;
+    min-height: 20vh;
+    transform: translate(-50%, -50%) scale(0);
+
+}
+
+#notecard.up{
+    animation: rotate .8s forwards, centers 1s forwards;
+}
+
+#notecard.down{
+    animation: rotate 1s reverse, centers 1s reverse;
+}
+
+@keyframes rotate{
+    0% {rotate: 90deg;  transform-origin: center, center;}
+    100% {rotate: 0deg; transform-origin: center, center;}
+}
+
+@keyframes expand{
+    0% {scale: 0;}
+    100% {scale: 1;}
+}
+@keyframes centers{
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    top: 50%;
+    left: 50%;
+    z-index: 5;
+  }  
+}
