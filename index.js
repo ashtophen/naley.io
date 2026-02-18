@@ -9,6 +9,7 @@ import * as crypto from 'node:crypto';
 import { stringify } from 'node:querystring';
 import { createReadStream, fsync, readFile, readFileSync, readdir, readdirSync, rmSync, statSync, unlink, unlinkSync, writeFileSync } from 'node:fs';
 import 'dotenv/config';
+import favicon from 'serve-favicon';
 //My Functions And Etc.
 
 // add the crypto module for UUID
@@ -17,6 +18,11 @@ let uuid = crypto.randomUUID();
 // open the database file
 const db = await open({
   filename: 'chat.db',
+  driver: sqlite3.Database
+});
+
+const suggestionDb = await open({
+  filename: 'suggestion.db',
   driver: sqlite3.Database
 });
 
@@ -38,6 +44,14 @@ await db.exec(`
 		color TEXT
     );
 `);
+
+await suggestionDb.exec(`
+    CREATE TABLE IF NOT EXISTS suggestions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      suggestion TEXT,
+      name TEXT
+    );
+`);
 var client_id = 'e3243c3ad9b349b09fe88cc642bcf43b';
 var redirect_uri = 'https://naley.io/musicparty';
 var myplayers = [];
@@ -52,30 +66,22 @@ const io = new Server(server, {
 app.use(express.json());
 
 app.post('/api-endpoint', (req, res) => {
-  const recievedData = req.body;
-  console.log('Data recieved:', recievedData);
-  res.status(200).json({status: 'success', received: recievedData });
+  let result;
+  const receivedData = req.body;
+  console.log('Data recieved:', receivedData);
+  result = suggestionDb.run('INSERT INTO suggestions (suggestion, name) VALUES (?, ?)', receivedData.suggestion, null);
+  res.status(200).json({status: 'success', received: receivedData });
 });
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
-app.use('/public', express.static(join(__dirname, 'public')));
+app.use(favicon(join(__dirname, 'public', 'favicon.ico')));
+
+app.use(express.static(join(__dirname, 'public')));
 
  app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, '/public/index.html'));
+  res.sendFile(join(__dirname, 'public','index.html'));
 });
-
-app.get('/style.css', (req, res) => {
-    res.sendFile(join(__dirname, 'style.css'));
-  });
-
-  app.get('/lobby.html', (req, res) => {
-    res.sendFile(join(__dirname, 'lobby.html'));
-  });
-
-  app.get('/bytebounce/ByteBounce.woff2', (req, res) => {
-    res.sendFile(join(__dirname, '/bytebounce/ByteBounce.woff2'));
-  });
 
 io.on('connection', async (socket) => {
     socket.on('name', async (user) => {

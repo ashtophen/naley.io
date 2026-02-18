@@ -10,9 +10,11 @@ suggestionBox.onclick = function(){
 };
 
 submitSuggestion.onclick = function(){
-    sendDataToServer(suggestionMessage.innerText);
+    sendDataToServer(suggestionMessage.value);
     flyDown();
-    suggestionMessage.innerText = "";
+    notecard.addEventListener('animationend', function() {
+        suggestionMessage.value = "";
+    })
 }
 
 function flyUp(){
@@ -41,7 +43,7 @@ async function sendDataToServer(data) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({suggestion: data})
     };
     const response = await fetch('/api-endpoint', options);
     const result = await response.json();

@@ -12,6 +12,7 @@
         "mediabunny": "^1.31.0",
         "node": "^25.5.0",
         "node-gyp": "^12.2.0",
+        "serve-favicon": "^2.5.1",
         "socket.io": "^4.8.3",
         "sqlite": "^5.1.1",
         "sqlite3": "^5.1.7",
