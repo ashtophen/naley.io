@@ -17,6 +17,11 @@ submitSuggestion.onclick = function(){
     })
 }
 
+notecardModal.onclick = function(){
+    flyDown();
+    console.log("OW!");
+}
+
 function flyUp(){
     if(notecard.classList.contains("down")){
         notecard.classList.remove("down");
