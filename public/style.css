@@ -345,10 +345,10 @@ canvas {
 
 #notecard{
     position: absolute;
+    max-width: 80vw;
     z-index: 5;
     top: 80vh;
     left: 60vw;
-    min-height: 20vh;
     transform: translate(-50%, -50%) scale(0);
 
 }
@@ -380,4 +380,13 @@ canvas {
     left: 50%;
     z-index: 5;
   }  
+}
+
+@media only screen and (max-width: 600px){
+
+    textarea {
+        font-size: small !important;
+
+    }
+
 }
