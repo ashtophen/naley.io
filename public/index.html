@@ -61,13 +61,14 @@
 </footer>
 </div>
 <div id="notecard">
-    <textarea style="position: absolute; top:30%;font-size: xx-large; background-color: transparent; resize: none; border: none; outline: none;" rows="10" cols="40"></textarea>
+    <textarea id="suggestion-message" style="position: absolute; top:30%;font-size: xx-large; background-color: transparent; resize: none; border: none; outline: none;" rows="10" cols="40"></textarea>
     <img src="./images/index-card.png">
 </div>
 <button id="suggestion-submit" class="button" style="position: absolute; bottom: 20%; left: 50%; transform: translate(-50%, -50%); z-index: 99; display: none;">Submit</button>
 
 
-<script src=/scripts/preloading.js></script>
+<script src="/scripts/preloading.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 <script>
 </script>
 <script src="/scripts/compliance/accept.js"></script>

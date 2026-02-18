@@ -2,6 +2,7 @@ const suggestionBox = document.getElementById("suggestion-box");
 const notecard = document.getElementById("notecard");
 const notecardModal = document.getElementById("notecardmodal");
 const submitSuggestion = document.getElementById("suggestion-submit");
+const suggestionMessage = document.getElementById("suggestion-message");
 
 suggestionBox.onclick = function(){
     flyUp();
@@ -9,7 +10,9 @@ suggestionBox.onclick = function(){
 };
 
 submitSuggestion.onclick = function(){
+    sendDataToServer(suggestionMessage.innerText);
     flyDown();
+    suggestionMessage.innerText = "";
 }
 
 function flyUp(){
@@ -31,3 +34,18 @@ function flyDown(){
     notecardModal.style.display = "none";
     submitSuggestion.style.display = "none";
 }
+
+async function sendDataToServer(data) {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+    const response = await fetch('/api-endpoint', options);
+    const result = await response.json();
+    console.log(result);
+}
+// Example usage:
+// sendDataToServer({ message: 'Hello Node.js server!' })

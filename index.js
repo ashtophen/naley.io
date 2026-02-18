@@ -49,6 +49,14 @@ const io = new Server(server, {
   connectionStateRecovery: {}
 });
 
+app.use(express.json());
+
+app.post('/api-endpoint', (req, res) => {
+  const recievedData = req.body;
+  console.log('Data recieved:', recievedData);
+  res.status(200).json({status: 'success', received: recievedData });
+});
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use('/public', express.static(join(__dirname, 'public')));
