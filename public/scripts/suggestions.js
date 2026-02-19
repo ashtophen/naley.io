@@ -19,7 +19,7 @@ submitSuggestion.onclick = function(){
 
 notecardModal.onclick = function(){
     flyDown();
-    console.log("OW!");
+    //console.log("OW!");
 }
 
 function flyUp(){

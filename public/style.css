@@ -390,3 +390,15 @@ canvas {
     }
 
 }
+
+.clickable{
+    transition: all .3s;
+}
+
+.clickable:hover{
+    scale: 1.03;
+}
+
+.clickable:active{
+    scale: .9;
+}
