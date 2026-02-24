@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { Server } from 'socket.io';
-import sqlite3 from 'sqlite3';
+import Database from 'better-sqlite3';
 import { open } from 'sqlite';
 import * as crypto from 'node:crypto';
 import { stringify } from 'node:querystring';
@@ -15,19 +15,15 @@ import favicon from 'serve-favicon';
 // add the crypto module for UUID
 let uuid = crypto.randomUUID();
 
-// open the database file
-const db = await open({
-  filename: 'chat.db',
-  driver: sqlite3.Database
-});
+// open the database files
+const db = new Database('chat.db');
+db.pragma('journal_mode = WAL');
 
-const suggestionDb = await open({
-  filename: 'suggestion.db',
-  driver: sqlite3.Database
-});
+const suggestionDb = new Database('suggestion.db');
+suggestionDb.pragma('journal_mode = WAL');
 
 // create our 'messages' table
-await db.exec(`
+db.exec(`
   CREATE TABLE IF NOT EXISTS messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       client_offset TEXT UNIQUE,
@@ -35,7 +31,7 @@ await db.exec(`
   );
 `);
 // create the 'user' table (ADD SPOTIFY ACCOUNT INFO LATER)
-await db.exec(`
+db.exec(`
     CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -45,7 +41,7 @@ await db.exec(`
     );
 `);
 
-await suggestionDb.exec(`
+suggestionDb.exec(`
     CREATE TABLE IF NOT EXISTS suggestions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       suggestion TEXT,
@@ -69,7 +65,8 @@ app.post('/api-endpoint', (req, res) => {
   let result;
   const receivedData = req.body;
   console.log('Data recieved:', receivedData);
-  result = suggestionDb.run('INSERT INTO suggestions (suggestion, name) VALUES (?, ?)', receivedData.suggestion, null);
+  const stmt = suggestionDb.prepare('INSERT INTO suggestions (suggestion, name) VALUES (?, ?)');
+  result = stmt.run(receivedData.suggestion, null);
   res.status(200).json({status: 'success', received: receivedData });
 });
 
@@ -91,7 +88,7 @@ io.on('connection', async (socket) => {
 		const rb = crypto.randomBytes(3);
 		const hexc = rb.toString('hex');
 		const fincol = `#${hexc}`;
-        result = await db.run('INSERT INTO user (name, uuid, color) VALUES (?, ?, ?)', limiteduser, uuid, fincol);
+        result =  db.prepare('INSERT INTO user (name, uuid, color) VALUES (?, ?, ?)', limiteduser, uuid, fincol);
         io.emit('name', limiteduser, uuid, fincol);
     });
 
@@ -99,7 +96,7 @@ io.on('connection', async (socket) => {
       let result;
       msg =`<span style="color: ${color}">${user}: </span>` + msg;
       try {
-        result = await db.run('INSERT INTO messages (content, client_offset) VALUES (?, ?)', msg, clientOffset);
+        result = db.prepare('INSERT INTO messages (content, client_offset) VALUES (?, ?)', msg, clientOffset);
       } catch (e) {
         if (e.errno === 19 /* SQLITE_CONSTRAINT */ ) {
           // the message was already inserted, so we notify the client
@@ -119,7 +116,7 @@ io.on('connection', async (socket) => {
       let intready;
       let result;
       intready = Number(ready);
-      result = await db.run('UPDATE user SET ready = ? WHERE uuid = ?', intready, uuid);
+      result = db.prepare('UPDATE user SET ready = ? WHERE uuid = ?', intready, uuid);
       io.emit('ready change', ready, uuid);
 
       callback();
@@ -134,13 +131,14 @@ io.on('connection', async (socket) => {
             file  = buffer;
         }
         writeFileSync(`./public/tempfiles/${uuid}.png`, file);
-        result = await db.each('SELECT name, ready FROM user WHERE uuid = ?', uuid, (_err, row) => {
+        result = db.prepare('SELECT name, ready FROM user WHERE uuid = ?').get(uuid);
+        if(result) {
             io.emit('pfp update', file, uuid, row.name);
             io.emit('ready change', row.ready, uuid);
+        }
             callback();
         });
         
-    });
 	
     socket.on('gamestart', (callback) => {
       started = true;
@@ -210,7 +208,7 @@ io.on('connection', async (socket) => {
       } catch (e) {
         // something went wrong
       }
-    }
+    };
   });
 
   function emptyDirectory(dirPath) {
