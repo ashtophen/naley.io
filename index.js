@@ -96,7 +96,8 @@ io.on('connection', async (socket) => {
       let result;
       msg =`<span style="color: ${color}">${user}: </span>` + msg;
       try {
-        result = db.prepare('INSERT INTO messages (content, client_offset) VALUES (?, ?)', msg, clientOffset);
+        result = db.prepare('INSERT INTO messages (content, client_offset) VALUES (?, ?)')
+        result = result.run(msg, clientOffset);
       } catch (e) {
         if (e.errno === 19 /* SQLITE_CONSTRAINT */ ) {
           // the message was already inserted, so we notify the client
@@ -116,7 +117,8 @@ io.on('connection', async (socket) => {
       let intready;
       let result;
       intready = Number(ready);
-      result = db.prepare('UPDATE user SET ready = ? WHERE uuid = ?', intready, uuid);
+      result = db.prepare('UPDATE user SET ready = ? WHERE uuid = ?')
+      result = db.run(intready, uuid);
       io.emit('ready change', ready, uuid);
 
       callback();
@@ -167,7 +169,7 @@ io.on('connection', async (socket) => {
     //ROOM HOSTING
     
 
-
+    //fix this to make it synchronous
     if (!socket.recovered) {
       try {
         await db.each('SELECT id, content FROM messages WHERE id > ?',
