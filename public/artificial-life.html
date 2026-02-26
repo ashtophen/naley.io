@@ -1,13 +1,31 @@
 <!DOCTYPE html>
 
 <head>
-
+    <title>Artificial Life</title>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="description" content="Artificial life simulations! All hosted on Naley.io">
+    <meta name="author" content="Nathen Perley">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style> canvas{
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 80dvw;
+    }</style>
 </head>
 <body>
+    <div >
+            <div style="position: relative; height: 100dvh; width: 100dvw;">
+                <p>Current Cell:<span id="current-cell"></span></p>
+                <canvas id="canvasGrid" height="800" width="800" style="position:absolute; border: 2px solid #333; background-color: transparent; z-index: 2;"></canvas>
+                <canvas id="canvasPerm" height="800" width="800" style="position:absolute; border: 2px solid #333; background-color: grey; z-index: 1;"></canvas>
+            </div>
+    </div>
 
-<div>Under Construction</div>
 
 
-
-    <script></script>
+    <script src="scripts/life.js"></script>
 </body>
