@@ -1,8 +1,12 @@
 window.onload = function() {
     const canvas = document.getElementById("canvasGrid");
     const ctx = canvas.getContext("2d");
+    const canvasLife = document.getElementById("canvasPerm");
+    const ctxLife = canvasLife.getContext("2d");
     const currCell = document.getElementById("current-cell");
     let rectBuffer;
+    let cellColor = [200, 190, 20];// array of rgb value
+    let highlightColor = "rgb(200 190 20/ 50%)";
 
     const canvasWidth = canvas.width;
     const canvasHeight = canvas.height;
@@ -51,16 +55,45 @@ window.onload = function() {
     
         // 4. Draw the rectangle
         // fillRect(startX, startY, width, height)
-        ctx.fillStyle = "rgb(200 190 20/ 50%)"
+        ctx.fillStyle = highlightColor;
         if(rectBuffer){ctx.clearRect(rectBuffer.x, rectBuffer.y, gridSize-(ctx.lineWidth), gridSize-(ctx.lineWidth));}
         ctx.fillRect(drawX+(ctx.lineWidth/2), drawY+(ctx.lineWidth/2), gridSize-(ctx.lineWidth), gridSize-(ctx.lineWidth));
         rectBuffer = {x: drawX+(ctx.lineWidth/2), y: drawY+(ctx.lineWidth/2)};
         console.log(rectBuffer);
         console.log(`Rect painted at: ${drawX}, ${drawY} with size ${gridSize}`);
     }
+
+    function toggleCell(getMousePos, canvas){
+        const pixel = ctxLife.getImageData(getMousePos.x, getMousePos.y, 1, 1).data.slice(0, 3);
+        const target = cellColor;
+        const isFilled = pixel.every((val, i) => val === target[i]);
+        let cellX = Math.floor(getMousePos.x / gridSize);
+        let cellY = Math.floor(getMousePos.y / gridSize);
+    
+        // 2. Update UI text
+        currCell.innerText = `${cellX}, ${cellY}`;
+    
+        // 3. Calculate drawing position
+        // We multiply the index by the gridSize to get the pixel starting point
+        let drawX = cellX * gridSize;
+        let drawY = cellY * gridSize;
+    
+        // 4. Draw the rectangle
+        // fillRect(startX, startY, width, height)
+        ctxLife.fillStyle = `rgb(${cellColor})`;
+        if(!isFilled){
+            ctxLife.fillRect(drawX+(ctx.lineWidth/2), drawY+(ctx.lineWidth/2), gridSize-(ctx.lineWidth), gridSize-(ctx.lineWidth));
+        }else{ctxLife.clearRect(drawX+(ctx.lineWidth/2), drawY+(ctx.lineWidth/2), gridSize-(ctx.lineWidth), gridSize-(ctx.lineWidth));}
+        console.log(ctxLife.getImageData(getMousePos.x, getMousePos.y, 1, 1));
+        }
+
       canvas.addEventListener("pointerdown", function(e){
         console.log(getMousePos(canvas, e));
       });
+      canvas.addEventListener("pointerup", function(e){
+        toggleCell(getMousePos(canvas, e), canvasLife);
+      });
+
       canvas.addEventListener("pointermove", function(e){
         highlightCell(getMousePos(canvas, e));
         console.log(getMousePos(canvas, e));
