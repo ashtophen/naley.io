@@ -21,10 +21,33 @@
 		</div>
 		</div>
 	</div>
+	<div class="modal" id="settings">
+		<button class="clickable-text" id="settings-modal-exit" style="display: absolute; text-decoration: none !important; float: right; margin-right: 12px;">[X]</button>
+		<div class="flexcontainer-row" style="justify-self: center;">
+		<div class="container" style="width: 80vw; height:80vh; overflow: auto; max-width: 600px; text-align: center; background-color: rgb(73, 73, 73); justify-self: center; align-self: center; z-index: 5;">
+		<button id="resetBtn">Reset</button>
+		</div>
+		</div>
+	</div>
+	<div class="modal" id="confirm-window">
+		<div class="flexcontainer-row" style="justify-self: center;">
+		<div class="container" style="width: 80vw; height:80vh; overflow: auto; max-width: 600px; text-align: center; background-color: rgb(73, 73, 73); justify-self: center; align-self: center; z-index: 5;">
+		<p>Are You Sure?</p>
+		<p class="confirmation-desc"></p>
+		<button>Yes</button>
+		<button>No</button>
+		</div>
+		</div>
+	</div>
 <div id="game">
 <header style=" top: 0; width: 100vw; height: 60px; background-color: rgb(33, 33, 48); align-content: center;">
 <h1>Brownie Toucher</h1>
 </header>
+<div style="width: 100dvw; height:40px; background-color: darkorchid; align-content: center;">
+<button id="settingsBtn">Settings</button>
+<button id="saveBtn">Save</button>
+<button id="sinBtn">Sin</button>
+</div>
 <div id="thirds">
 <div id="first" class="griditem">
 	<br>
@@ -37,12 +60,30 @@
 <button id="brownie" onclick="clickBrownie(event)" style="border: none; background-color: transparent;"><img style="max-width: 100%;" src="/images/Brownie_transparent.png"></button>
 </div>
 <div id="second" class="griditem">
+
 	<div id="infoPopup" class="popup">
-		<div></div>
-	This info box tracks your cursor!
-</div></div>
+		<hr>
+		<div id="popup-description">
+			This info box tracks your cursor!
+		</div>
+		<hr>
+		<div id="popup-details">
+
+		</div>
+		
+	</div>
+</div>
 
 <div id="third" class="griditem">
+	<div style="margin: 4px 0px 6px 0px;">
+		<p>Purchase Amount</p>
+		<div style="display: flexbox; flex-direction: row; align-content: center;">
+		<button id="1x">1x</button>
+		<button id="10x">10x</button>
+		<button id="100x">100x</button>
+		<button id="max">max</button>
+		</div>
+	</div>
 	<button class="upgrade">
 		<p class="upgrade-name">extra hand</p>
 		<p class="upgrade-cost">1</p>
@@ -58,19 +99,29 @@
 		<p class="upgrade-cost">1000</p>
 		<p style="float:right;"class="amount-purchased"></p>
 	</button>
+	<button class="upgrade">
+		<p class="upgrade-name">dad</p>
+		<p class="upgrade-cost">10000</p>
+		<p style="float:right;"class="amount-purchased"></p>
+	</button>
+	<button class="upgrade">
+		<p class="upgrade-name">God</p>
+		<p class="upgrade-cost">99999999999999999999999999999999999</p>
+		<p style="float:right;"class="amount-purchased"></p>
+	</button>
 </div>
 </div>
 <div id="autosavecontainer" style="position: relative;">
 	<!--<div style="position: absolute; bottom:0;">AAAAAAAA</div> -->
 </div>
 <footer style="width: 100vw; background-color: rgb(33, 33, 48); font-size: 28px;">
-Ver 0.0.5a <button style="position: absolute; right: 0%; margin-right: 12px;" class="clickable-text" id="changelog">changelog</button>
+Ver 0.0.9a <button style="position: absolute; right: 0%; margin-right: 12px;" class="clickable-text" id="changelog">changelog</button>
 <div class="flexcontainer-row">
 	<a class="button" href="/">Home</a>
 </div>
 </footer>
 </div>
-<script src="scripts/minigames/brownietoucher.js"></script>
+<script src="scripts/minigames/brownietoucher/brownietoucher.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
 <script>
     //Loading, Formatting, and Displaying changelog
@@ -96,13 +147,40 @@ document.getElementById("changelog").onclick = function() {
 document.getElementById("modal-exit").onclick = function() {
 	document.getElementById("modal").style.display = "none";
 }
-document.getElementById("modal").onclick = function(event) {
-	if (event.target === event.currentTarget){
-	document.getElementById("modal").style.display = "none";}
+
+// NEW
+
+const modals = document.querySelectorAll(".modal");
+const modalExit = document.querySelectorAll("modal-exit");
+
+modals.forEach(modal => {
+	modal.addEventListener('click', (event) => {if (event.target === event.currentTarget){modal.style.display = "none";}})
+})
+
+
+
+document.getElementById("saveBtn").onclick = function() {
+	save(true);
+}
+document.getElementById("settingsBtn").onclick = function() {
+	document.getElementById('settings').style.display = "block";
+}
+
+document.getElementById("resetBtn").onclick = function() {
+	//in the future call the confirmation function(yet to exist)
+	//localStorage.getItem('save')
 }
 </script>
 <script>
-	
+	document.getElementById("1x").onclick = function() {
+		purchaseAmountChange(1);
+	}
+	document.getElementById("10x").onclick = function() {
+		purchaseAmountChange(10);
+	}
+	document.getElementById("100x").onclick = function() {
+		purchaseAmountChange(100);
+	}
 </script>
 <script>
     document.addEventListener('gesturestart', function (e) {

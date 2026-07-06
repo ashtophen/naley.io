@@ -23,7 +23,14 @@
       "multiplier": 1.15
     },
     {
-      "name":  "GOD",
+      "name": "dad",
+      "description": "While we're getting family involved, now might be a good time to admit my dad was always the better baker. Love you dad!",
+      "baseCost": 10000,
+      "baseAdd": 270,
+      "multiplier": 1.48
+    },
+    {
+      "name":  "God",
       "description": "That's right, capital G God has descended from the heavens, drawn by your simply divine brownies.",
       "baseCost": 99999999999999999999999999999999999,
       "baseAdd": 99999999999999,

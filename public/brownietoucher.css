@@ -55,15 +55,18 @@ background-color: rgb(33, 33, 74);
 justify-items: center;
 }
 .upgrade {
-	background-color: grey;
+	background-color: rgb(74, 74, 74);
 	width: 100%;
 	border: none;
 	border-radius: 0px;
 	text-shadow: 4px;
     transition: all 0.3s ease-out;
 }
+.unpurchasable{
+    background-color: #333 !important;
+}
 .upgrade:hover{
-	background-color: rgb(155, 155, 155);
+	background-color: rgb(121, 121, 121);
 	transform: scale(1);
     transition-duration: 0.1s;
 }
@@ -71,3 +74,4 @@ justify-items: center;
 	transform: scale(1);
 	background-color: rgb(92, 92, 92);
 }
+

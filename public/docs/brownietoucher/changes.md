@@ -1,5 +1,39 @@
 # BrownieToucher ChangeLog
 
+### DD/MM/YYYY
+
+## Ver 0.0.9a 06.07.2026
+
+### Added Features:
+- Added purchase amount buttons
+- Made upgrades shaded and unselectable when you don't have enough to purchase it.
+- Added save button
+- Added Settings Menu
+- Added notification system, currently only shows when saving and autosaving.
+
+### Fixed Bugs:
+- none.
+
+### Known Bugs:
+- 10x and 100x purchase amount do incorrect pricing calculations
+- notification system will stack notifications and display them all at once if the page is backgrounded
+- reset button in settings menu is nonfunctional
+- max purchase button is nonfunctional
+
+
+## Ver 0.0.6a
+
+## Update Release: 02.07.2026
+
+### Added Features:
+- Flair when clicking the brownie.
+- Two new upgrades.
+
+### Fixed Bugs:
+- When loading a save from a previous version the game will now throw an error and handle the mismatch instead of simply breaking.
+
+### Known Bugs:
+- none.
 
 ## Ver 0.0.5a
 
