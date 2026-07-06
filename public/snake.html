@@ -134,6 +134,45 @@ function loop() {
     }
   });
 }
+let startX = 0;
+let startY = 0;
+document.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+}, {passive: true});
+document.addEventListener('touchend', (e) => {
+    let endX = e.changedTouches[0].clientX;
+    let endY = e.changedTouches[0].clientY;
+
+    handleSwipe(endX, endY);
+}, {passive: true});
+
+function handleSwipe(endX, endY) {
+    let diffX = endX - startX;
+    let diffY = endY - startY;
+        // Check which axis had the larger movement to prevent diagonal ambiguity
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0 && snake.dx === 0) {
+            //resultText.innerText = "Swiped Right";
+            snake.dx = grid;
+            snake.dy = 0;
+        } else if (snake.dx === 0){
+            //resultText.innerText = "Swiped Left";
+            snake.dx = -grid;
+            snake.dy = 0; 
+        }
+    } else {
+        if (diffY > 0 && snake.dy === 0) {
+            //resultText.innerText = "Swiped Down";
+            snake.dy = grid;
+            snake.dx = 0;
+        } else if (snake.dy === 0) {
+            //resultText.innerText = "Swiped Up";
+            snake.dy = -grid;
+            snake.dx = 0;
+        }
+    }
+}
 
 // listen to keyboard events to move the snake
 document.addEventListener('keydown', function(e) {
