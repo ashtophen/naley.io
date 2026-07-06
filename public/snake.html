@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Basic Snake HTML Game</title>
+  <title>Snake Game</title>
   <meta charset="UTF-8">
   <style>
   html, body {
@@ -22,7 +22,16 @@
   </style>
 </head>
 <body>
+    <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; flex-direction: row;">
+            <h1 style="color: white; margin-right: 24px;">Score:</h1> <h1 style="color: white;" id="score">0</h1>
+        </div>
+    <button id="start" type="button" onclick="start = true" style="height: 48px; font-size: x-large;">Start</button>
+    <br>
 <canvas width="400" height="400" id="game"></canvas>
+<br>
+<p style="color: white;">based off: <a href="https://gist.github.com/straker/ff00b4b49669ad3dec890306d348adc4">https://gist.github.com/straker/ff00b4b49669ad3dec890306d348adc4</a></p>
+</div>
 <script>
 var canvas = document.getElementById('game');
 var context = canvas.getContext('2d');
@@ -51,16 +60,23 @@ var apple = {
   y: 320
 };
 
+let start = false;
+let score = 0;
+let highScore = 0; //yet to be used
+let scoreDisplay = document.getElementById("score");
 // get random whole numbers in a specific range
 // @see https://stackoverflow.com/a/1527820/2124254
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+
 // game loop
 function loop() {
+     if(!start){requestAnimationFrame(loop);
+    }else{
   requestAnimationFrame(loop);
-
+  scoreDisplay.innerText = score;
   // slow game loop to 15 fps instead of 60 (60/15 = 4)
   if (++count < 4) {
     return;
@@ -111,6 +127,7 @@ function loop() {
     // snake ate apple
     if (cell.x === apple.x && cell.y === apple.y) {
       snake.maxCells++;
+      score++;
 
       // canvas is 400x400 which is 25x25 grids
       apple.x = getRandomInt(0, 25) * grid;
@@ -128,12 +145,14 @@ function loop() {
         snake.maxCells = 4;
         snake.dx = grid;
         snake.dy = 0;
+        score = 0;
 
         apple.x = getRandomInt(0, 25) * grid;
         apple.y = getRandomInt(0, 25) * grid;
       }
     }
   });
+}
 }
 let startX = 0;
 let startY = 0;
