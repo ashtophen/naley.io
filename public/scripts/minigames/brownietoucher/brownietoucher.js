@@ -25,11 +25,24 @@ class SaveDataMismatchError extends Error {
 function purchaseAmountChange(newAmount){
   if (newAmount !== "max"){
     purchaseAmount = newAmount;
+
     upgrades.forEach(upgrade => {
       const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
 	    const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
       const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
-      upgradeCost.innerText = Math.ceil((getUpgrade(upgradeName.innerText).baseCost * getUpgrade(upgradeName.innerText).multiplier) * Number(amountPurchased.innerText) * purchaseAmount);
+      const name = upgradeName.innerText;
+      const currentOwned = Number(amountPurchased.innerText);
+      const upgradeTo = getUpgrade(name);
+      const baseCost = upgradeTo.baseCost;
+      const multiplier = upgradeTo.multiplier;
+      const n = purchaseAmount;
+
+      const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
+
+      let totalCost = 0;
+
+      totalCost = nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier));
+      upgradeCost.innerText = Math.ceil(totalCost);
     });
       
   }else{return//fix this later
@@ -124,6 +137,20 @@ let notificationQueue = [];
       const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
       const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
       const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
+        const name = upgradeName.innerText;
+        const currentOwned = Number(amountPurchased.innerText);
+        const upgradeTo = getUpgrade(name);
+        const baseCost = upgradeTo.baseCost;
+        const multiplier = upgradeTo.multiplier;
+        const n = purchaseAmount;
+  
+        const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
+  
+        let totalCost = 0;
+  
+        totalCost = nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier));
+        upgradeCost.innerText = Math.ceil(totalCost);
+      
       if (Number(upgradeCost.innerText) > Math.floor(fractionalCounter)){
         upgrade.classList.add('unpurchasable');
         //console.log("ow")
@@ -168,7 +195,12 @@ let notificationQueue = [];
 }
   function loadSave(){
     let i = 0;
-    if (localStorage.getItem("saveData") === null){return};
+    if (localStorage.getItem("saveData") === "null" || localStorage.getItem("saveData" === null)){
+      bps = 0;
+      lifetimeTotal = 0;
+      fractionalCounter = 0;
+      return;
+    };
     let saveData = JSON.parse(localStorage.getItem("saveData"));
     bps = saveData.bps;
     lifetimeTotal = saveData.lifetimeTotal;
@@ -335,13 +367,13 @@ upgrades.forEach(upgrade => {
 	} else {upgradeName.innerText = hiddenText;}
 	}, 100);
 	upgrade.onclick = function() {
-		if (fractionalCounter >= Number(upgradeCost.innerText) * purchaseAmount){
-			subtractBrownies(Number(upgradeCost.innerText) * purchaseAmount);
+		if (fractionalCounter >= Number(upgradeCost.innerText)){
+			subtractBrownies(Number(upgradeCost.innerText));
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){
 				bps += getUpgrade(upgradeName.innerText).baseAdd;
 			}
-			upgradeCost.innerText = Math.ceil((getUpgrade(upgradeName.innerText).baseCost * getUpgrade(upgradeName.innerText).multiplier) * Number(amountPurchased.innerText) * purchaseAmount);
+			//upgradeCost.innerText = Math.ceil(getUpgrade(upgradeName.innerText).baseCost * Math.pow(getUpgrade(upgradeName.innerText).multiplier, Number(amountPurchased.innerText)) * purchaseAmount);
 		}
 		
 

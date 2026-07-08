@@ -27,7 +27,7 @@
       "description": "While we're getting family involved, now might be a good time to admit my dad was always the better baker. Love you dad!",
       "baseCost": 10000,
       "baseAdd": 270,
-      "multiplier": 1.48
+      "multiplier": 1.148
     },
     {
       "name":  "God",
@@ -37,7 +37,10 @@
       "multiplier": 9999999999999999999999999999999999999999999999
     },
     {
-
-
+      "name": "???",
+      "description":  "???",
+      "baseCost": null,
+      "baseAdd": null,
+      "multiplier": null
     }
         ]
