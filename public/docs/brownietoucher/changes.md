@@ -2,7 +2,24 @@
 
 ### DD/MM/YYYY
 
-## Ver 0.0.9a 06.07.2026
+## Ver 0.1.1a 08.07.2026
+
+### Added Features:
+
+- none.
+
+### Fixed Bugs:
+- incorrect pricing formula
+- incorrect purchase amount pricing estimation
+- incorrect error handling when saveData is absent
+
+### Known Bugs: 
+
+- Page layout fluctation due to brownie counter placement
+- Notifications still stack after backgrounded tab
+- data.find not a function (occasional error thrown upon page reloading)
+
+## Ver 0.1.0a 06.07.2026
 
 ### Added Features:
 - Added purchase amount buttons
