@@ -75,3 +75,31 @@ justify-items: center;
 	background-color: rgb(92, 92, 92);
 }
 
+#advancement-container {
+
+    border: 2px, solid, goldenrod;
+    width: 100%;
+    height:auto;
+    max-height: 256px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(75, 16, 130);
+    
+}
+
+#advancement-title{
+    height: auto;
+    background-color: blueviolet;
+    -webkit-text-stroke: 2px white;
+    font-size:  48px;
+    paint-order: stroke fill;
+}
+#advancement-list {
+    display: flex;
+}
+
+.advancement{
+    height: 48px;
+    width: 48px;
+    border: 2px, solid, gold;
+}

@@ -8,12 +8,26 @@ let clickAdd = 1; //amount of brownies a single click adds (This is self explana
 const counter = document.getElementById("counter"); // this counter displays whole numbers only
 const upgrades = document.querySelectorAll(".upgrade");
 let counterNum;
-var data = [];
+let data = [];
+let advancements = [];
+let achievements = [];
+const popupDetails = document.getElementById("popup-details")
+
+
 //oooo ahhh
 //tick variables
 let bps = 0; //brownies per second (NOT INCLUDING CLICKS)
 let lastTimestamp = 0; // used to set as timestamp
-data = loadData();
+
+
+//ts is so f*cking stupid man. You should have just made it a module.
+async function loadAllJson(){
+  data = await loadData('./scripts/minigames/brownietoucher/upgrades.json');
+  advancements = await loadData('./scripts/minigames/brownietoucher/advancements.json');
+  achievements = await loadData('./scripts/minigames/brownietoucher/achievements.json');
+}
+
+loadAllJson();
 
 class SaveDataMismatchError extends Error {
   constructor(message) {
@@ -49,15 +63,16 @@ function purchaseAmountChange(newAmount){
   }
 }
 
- async function loadData() {
+ async function loadData(path) {
+  let oop = [] //temp data
     try {
-      const response = await fetch('./scripts/minigames/brownietoucher/upgrades.json'); // Fetch the file
+      const response = await fetch(path); // Fetch the file
       if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
       }
-      data = await response.json(); // Parse the JSON data into a JS object
-      console.log(data); // Use the data
-      return data;
+      oop = await response.json(); // Parse the JSON data into a JS object
+      console.log(oop); // Use the data
+      return oop;
     } catch (error) {
       console.error('Error fetching JSON:', error);
     }
@@ -122,43 +137,76 @@ let notificationQueue = [];
     fractionalCounter -= num;
   }
 
-  function tick(timestamp) {
-    if (!lastTimestamp) lastTimestamp = timestamp;
-    counterNum = Number(counter.innerText); // updating counter Num every frame here.
-    const deltaTime = timestamp - lastTimestamp;
-    lastTimestamp = timestamp;
-      fractionalCounter += (bps * deltaTime) / 1000;
-      lifetimeTotal += (bps * deltaTime) / 1000;
-      counter.innerText = Math.floor(fractionalCounter).toLocaleString();
-      document.getElementById("bps").innerText = bps;
-    //add all the stuff that needs to be modified every frame based on number of brownies here.
-    upgrades.forEach(upgrade => {
-      //console.log(Math.floor(fractionalCounter))
-      const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
-      const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
-      const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
-        const name = upgradeName.innerText;
-        const currentOwned = Number(amountPurchased.innerText);
-        const upgradeTo = getUpgrade(name);
-        const baseCost = upgradeTo.baseCost;
-        const multiplier = upgradeTo.multiplier;
-        const n = purchaseAmount;
-  
-        const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
-  
-        let totalCost = 0;
-  
-        totalCost = nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier));
-        upgradeCost.innerText = Math.ceil(totalCost);
-      
-      if (Number(upgradeCost.innerText) > Math.floor(fractionalCounter)){
-        upgrade.classList.add('unpurchasable');
-        //console.log("ow")
-      } else { upgrade.classList.remove('unpurchasable')}
-    });
 
-    requestAnimationFrame(tick);
+// !!! CAUTION: TICK() OPTIMIZED ENTIRELY USING AI SLOP. YEAH I KNOW I SHOULDN'T HAVE BUT IM SO LAZY, AND IT WORKED
+// IF I EVER HAVE TO CHANGE THIS FUNCTION I MIGHT SOB.
+// PLEASE GOD LET IT BE OK.
+
+let lastFloorCounter = -1; // math.floor value
+let lastBpsValue = -1; //should be the same as floor? but also ai so idk.
+
+function tick(timestamp) {
+  if (!lastTimestamp) lastTimestamp = timestamp;
+  const deltaTime = timestamp - lastTimestamp;
+  lastTimestamp = timestamp;
+
+  // 1. Core game math (Super fast in memory)
+  fractionalCounter += (bps * deltaTime) / 1000;
+  lifetimeTotal += (bps * deltaTime) / 1000;
+  const currentFloorCounter = Math.floor(fractionalCounter);
+
+  // 2. ONLY update the counter DOM if the whole number actually changed
+  if (currentFloorCounter !== lastFloorCounter) {
+    counter.innerText = currentFloorCounter.toLocaleString();
+    lastFloorCounter = currentFloorCounter;
   }
+
+  // 3. ONLY update BPS DOM if the value changed
+  if (bps !== lastBpsValue) {
+    document.getElementById("bps").innerText = bps;
+    lastBpsValue = bps;
+  }
+
+  // 4. Optimized Upgrade Loop
+  upgrades.forEach(upgrade => {
+    // CACHE elements on the upgrade object itself if they don't exist yet
+    // This avoids slow getElementsByClassName calls every single frame!
+    if (!upgrade._cachedElements) {
+      upgrade._cachedElements = {
+        name: upgrade.getElementsByClassName("upgrade-name")[0].innerText,
+        amountText: upgrade.getElementsByClassName("amount-purchased")[0],
+        costText: upgrade.getElementsByClassName("upgrade-cost")[0]
+      };
+    }
+    
+    const cache = upgrade._cachedElements;
+    const currentOwned = Number(cache.amountText.innerText);
+    const upgradeTo = getUpgrade(cache.name);
+    
+    if (!upgradeTo) return;
+
+    // Fast math
+    const baseCost = upgradeTo.baseCost;
+    const multiplier = upgradeTo.multiplier;
+    const n = purchaseAmount;
+    const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
+    const totalCost = Math.ceil(nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier)));
+
+    // ONLY write the text if the cost is different (saves rendering cycles)
+    if (cache.costText.innerText !== String(totalCost)) {
+      cache.costText.innerText = totalCost;
+    }
+    
+    // Toggle classList using a boolean condition (avoids slow if/else logic)
+    const isUnpurchasable = totalCost > currentFloorCounter;
+    upgrade.classList.toggle('unpurchasable', isUnpurchasable);
+  });
+  requestAnimationFrame(tick);
+}
+
+
+
+
     //My old way of doing it, adds the total bps once a second.
     /*if(bps > 0){
       counter.innerText = Number(counter.innerText) + (bps);
@@ -371,7 +419,7 @@ upgrades.forEach(upgrade => {
 			subtractBrownies(Number(upgradeCost.innerText));
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){
-				bps += getUpgrade(upgradeName.innerText).baseAdd;
+				bps += (getUpgrade(upgradeName.innerText).baseAdd * purchaseAmount);
 			}
 			//upgradeCost.innerText = Math.ceil(getUpgrade(upgradeName.innerText).baseCost * Math.pow(getUpgrade(upgradeName.innerText).multiplier, Number(amountPurchased.innerText)) * purchaseAmount);
 		}
@@ -395,6 +443,8 @@ upgrades.forEach(upgrade => {
     } else { popupDescription.innerText = `${getUpgrade(upgradeName.innerText).description}` }
     // popupDetails.innerText = `Currently Making: ${upgradeDetails.name} Percentage Of Total: ${2}%`
     // ADD SOME KIND OF GLOBAL STAT TRACKING I BEG OF YOU 
+    // ...No.
+    popupDetails.innerHTML = `Adds <p style="color: red;">${upgradeDetails.baseAdd}</p> bps per each`
     popup.style.top = `${event.clientY - 60}px`;
 });
 });
