@@ -12,6 +12,7 @@
 
   body {
     background: black;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,6 +26,7 @@
     <div style="display: flex; flex-direction: column;">
         <div style="display: flex; flex-direction: row;">
             <h1 style="color: white; margin-right: 24px;">Score:</h1> <h1 style="color: white;" id="score">0</h1>
+            <h1 style="margin-left: auto; color: white; margin-right: 24px">Hiscore:</h1><h1 id="hiscore">0</h1>
         </div>
     <button id="start" type="button" onclick="start = true" style="height: 48px; font-size: x-large;">Start</button>
     <br>
@@ -66,7 +68,8 @@ var apple = {
 
 let start = false;
 let score = 0;
-let highScore = 0; //yet to be used
+let hiscore = 0; //yet to be used
+let hiscoreDisplay = document.getElementById("hiscore");
 let scoreDisplay = document.getElementById("score");
 // get random whole numbers in a specific range
 // @see https://stackoverflow.com/a/1527820/2124254
@@ -149,6 +152,11 @@ function loop() {
         snake.maxCells = 4;
         snake.dx = grid;
         snake.dy = 0;
+        if (score > hiscore){
+            hiscore = score;
+            hiscoreDisplay.innerText = hiscore;
+            localStorage.setItem("hiscore", hiscore);
+        }
         score = 0;
 
         apple.x = getRandomInt(0, 25) * grid;
@@ -229,6 +237,10 @@ document.addEventListener('keydown', function(e) {
 
 // start the game
 requestAnimationFrame(loop);
+if (localStorage.getItem("hiscore") > 0){ 
+    hiscoreDisplay.innerText = localStorage.getItem("hiscore");
+    hiscore = Number(localStorage.getItem("hiscore"));
+}
 </script>
 </body>
 </html>
