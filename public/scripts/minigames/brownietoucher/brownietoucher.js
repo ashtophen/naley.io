@@ -54,7 +54,7 @@ function purchaseAmountChange(newAmount){
       const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
 
       let totalCost = 0;
-
+      //if (multiplier == 1){ multiplier = 1}
       totalCost = nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier));
       upgradeCost.innerText = Math.ceil(totalCost);
     });
@@ -71,7 +71,7 @@ function purchaseAmountChange(newAmount){
           throw new Error(`HTTP error! status: ${response.status}`);
       }
       oop = await response.json(); // Parse the JSON data into a JS object
-      console.log(oop); // Use the data
+      // console.log(oop); // Use the data
       return oop;
     } catch (error) {
       console.error('Error fetching JSON:', error);
@@ -174,8 +174,8 @@ function tick(timestamp) {
     if (!upgrade._cachedElements) {
       upgrade._cachedElements = {
         name: upgrade.getElementsByClassName("upgrade-name")[0].innerText,
-        amountText: upgrade.getElementsByClassName("amount-purchased")[0],
-        costText: upgrade.getElementsByClassName("upgrade-cost")[0]
+        amountText: upgrade.getElementsByClassName("amount-purchased")[0].innerText,
+        costText: upgrade.getElementsByClassName("upgrade-cost")[0].innerText
       };
     }
     
@@ -203,16 +203,6 @@ function tick(timestamp) {
   });
   requestAnimationFrame(tick);
 }
-
-
-
-
-    //My old way of doing it, adds the total bps once a second.
-    /*if(bps > 0){
-      counter.innerText = Number(counter.innerText) + (bps);
-      lifetimeTotal += (bps);
-      document.getElementById("title").innerText = counter.innerText + " Brownies";
-    }*/
 
   function save(manual) {
     if (manual) {
@@ -243,12 +233,14 @@ function tick(timestamp) {
 }
   function loadSave(){
     let i = 0;
-    if (localStorage.getItem("saveData") === "null" || localStorage.getItem("saveData" === null)){
+    if (JSON.parse(localStorage.getItem("saveData")) === "null" || JSON.parse(localStorage.getItem("saveData")) === null){
       bps = 0;
       lifetimeTotal = 0;
       fractionalCounter = 0;
+      //console.log("oh");
+
       return;
-    };
+    }; 
     let saveData = JSON.parse(localStorage.getItem("saveData"));
     bps = saveData.bps;
     lifetimeTotal = saveData.lifetimeTotal;
@@ -259,6 +251,7 @@ function tick(timestamp) {
           throw new SaveDataMismatchError(`Missing save data for upgrade index ${i}`);
           return;
         }
+        //console.log('ow');
         const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
         const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
         const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
@@ -391,7 +384,8 @@ function tick(timestamp) {
   }
 
   function gameStart(){
-    if (localStorage.getItem("saveData")){
+    if (JSON.parse(localStorage.getItem("saveData")) !== null){
+      console.log("wow");
       loadSave();
     }
     requestAnimationFrame(tick);
@@ -444,7 +438,7 @@ upgrades.forEach(upgrade => {
     // popupDetails.innerText = `Currently Making: ${upgradeDetails.name} Percentage Of Total: ${2}%`
     // ADD SOME KIND OF GLOBAL STAT TRACKING I BEG OF YOU 
     // ...No.
-    popupDetails.innerHTML = `Adds <p style="color: red;">${upgradeDetails.baseAdd}</p> bps per each`
+    popupDetails.innerHTML = `Adds <p style="color: red; -webkit-text-stroke: 2px black; paint-order: stroke fill">${upgradeDetails.baseAdd}</p> bps per each`
     popup.style.top = `${event.clientY - 60}px`;
 });
 });
