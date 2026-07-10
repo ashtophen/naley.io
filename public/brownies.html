@@ -29,6 +29,23 @@
 		</div>
 		</div>
 	</div>
+	<div class="modal" id="unlocks-modal">
+		<button class="clickable-text" id="settings-modal-exit" style="display: absolute; text-decoration: none !important; float: right; margin-right: 12px;">[X]</button>
+		<div class="flexcontainer-row" style="justify-self: center;">
+		<div class="container" style="width: 80vw; height:80vh; overflow: auto; max-width: 600px; text-align: center; background-color: rgb(73, 73, 73); justify-self: center; align-self: center; z-index: 5;">
+		<h1>Everything You Have Unlocked</h1>
+		<h2>Purchased Structures, Advancements, And Unlocked Achievments</h2>
+		<div id="unlocked-icon-grid">
+			<div class="unlocked-icon"></div>
+			<div class="unlocked-icon"> </div>
+			<div class="unlocked-icon"></div>
+			<div class="unlocked-icon"> </div>
+			<div class="unlocked-icon"></div>
+			<div class="unlocked-icon"> </div>
+		</div>
+		</div>
+		</div>
+	</div>
 	<div class="modal" id="confirm-window">
 		<div class="flexcontainer-row" style="justify-self: center;">
 		<div class="container" style="width: 80vw; height:80vh; overflow: auto; max-width: 600px; text-align: center; background-color: rgb(73, 73, 73); justify-self: center; align-self: center; z-index: 5;">
@@ -44,6 +61,7 @@
 <h1>Brownie Toucher</h1>
 </header>
 <div style="width: 100dvw; height:40px; background-color: darkorchid; align-content: center;">
+<button id="unlocksBtn">Unlocked</button>
 <button id="settingsBtn">Settings</button>
 <button id="saveBtn">Save</button>
 <button id="sinBtn">Sin</button>
@@ -62,6 +80,7 @@
 <div id="second" class="griditem">
 
 	<div id="infoPopup" class="popup">
+		<h1 id="popup-title"></h1>
 		<hr>
 		<div id="popup-description">
 			This info box tracks your cursor!
@@ -78,9 +97,7 @@
 	<div id="advancement-container">
 		<h1 style="width: 100%;" id="advancement-title"> Advancements </h1>
 			<div id="advancements-list">
-				<div class="advancement">
 
-				</div>
 		</div>
 	</div>
 	<div>Structures?</div>
@@ -166,7 +183,9 @@ modals.forEach(modal => {
 	modal.addEventListener('click', (event) => {if (event.target === event.currentTarget){modal.style.display = "none";}})
 })
 
-
+document.getElementById("unlocksBtn").onclick = function() {
+	document.getElementById('unlocks-modal').style.display = "block";
+}
 
 document.getElementById("saveBtn").onclick = function() {
 	save(true);

@@ -11,6 +11,7 @@
     z-index: 1000;
     /* Add a slight offset so it doesn't immediately cover the cursor */
     transform: translate(10px, 10px);
+    max-width: 100%;
 }
 
 .upgrade {
@@ -94,12 +95,39 @@ justify-items: center;
     font-size:  48px;
     paint-order: stroke fill;
 }
-#advancement-list {
+#advancements-list {
     display: flex;
+    flex-direction: row;
+    width: 100%
 }
 
 .advancement{
     height: 48px;
     width: 48px;
     border: 2px, solid, gold;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#popup-title {
+    -webkit-text-stroke: 2px black;
+    font-size: xx-large;
+    paint-order: stroke fill;
+    white-space:nowrap;
+}
+
+#unlocked-icon-grid {
+    gap: 2px;
+    background-color: aquamarine;
+    margin-top: 24px;
+    justify-self: center;
+    display: grid;
+    width: 90%;
+    height: 80%;
+    border: 2px solid black;
+}
+
+.unlocked-icon {
+    background-color: #333;
 }

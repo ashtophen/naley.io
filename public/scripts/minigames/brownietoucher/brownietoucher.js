@@ -11,8 +11,18 @@ let counterNum;
 let data = [];
 let advancements = [];
 let achievements = [];
-const popupDetails = document.getElementById("popup-details")
+//const popupDetails = document.getElementById("popup-details")
+let start = false;
+const advancementList = document.getElementById('advancements-list');
 
+const popup = document.getElementById("infoPopup");
+const popupDescription = document.getElementById("popup-description");
+const popupDetails = document.getElementById('popup-details');
+const popupTitle = document.getElementById('popup-title');
+
+// OOOO HERES THAT GLOBAL TRACKING YOU WANTED SO BAD YOU F***ING F*****
+let advancementsPurchased = [];
+let achievementsGained = [];
 
 //oooo ahhh
 //tick variables
@@ -25,9 +35,50 @@ async function loadAllJson(){
   data = await loadData('./scripts/minigames/brownietoucher/upgrades.json');
   advancements = await loadData('./scripts/minigames/brownietoucher/advancements.json');
   achievements = await loadData('./scripts/minigames/brownietoucher/achievements.json');
+  propagateGameData();
+
+  advancementList.childNodes.forEach(advancement => {
+    const advancementData = advancements.find(advancementInfo => advancementInfo.name === `${advancement.id}`)
+    advancement.onclick = function() {
+      if (fractionalCounter >= Number(advancementData.cost)){
+        subtractBrownies(Number(advancementData.cost));
+        advancementsPurchased.push(advancementData.name);
+        advancement.remove();
+      }
+      
+    };
+    advancement.onmouseover = function() {
+      popup.style.display = "block";
+      popupDescription.innerText = `${advancementData?.description || "whoopsie, I failed to load that"}`;
+      popupTitle.innerText = `${advancement.id || "oh_no"}`;
+  
+    }
+    advancement.onmouseout = function() {
+      popup.style.display = "none";
+      popupDescription.innerText = "";
+      popupTitle.innerText = "";
+    }
+    advancement.addEventListener('mousemove', (event) => {
+      popupDetails.innerHTML = `Costs <p style="color: red; -webkit-text-stroke: 2px black; paint-order: stroke fill">${advancementData?.cost || "oh_no"}</p>`
+      popup.style.top = `${event.clientY - 60}px`;
+  });
+  })
 }
 
 loadAllJson();
+
+function propagateGameData(){
+  advancements.forEach(advancement => {
+    let icon = document.createElement('div');
+    icon.classList.add('advancement');
+    icon.style.backgroundImage = `url(${advancement.icon || "./images/oh_no.png"})`
+    icon.style.backgroundColor = "white";
+    advancementList.appendChild(icon);
+    icon.id = advancement.name || "oh_no";
+  });
+}
+
+
 
 class SaveDataMismatchError extends Error {
   constructor(message) {
@@ -35,6 +86,7 @@ class SaveDataMismatchError extends Error {
     this.name = "SaveDataMismatchError";
   }
 }
+
 
 function purchaseAmountChange(newAmount){
   if (newAmount !== "max"){
@@ -141,6 +193,8 @@ let notificationQueue = [];
 // !!! CAUTION: TICK() OPTIMIZED ENTIRELY USING AI SLOP. YEAH I KNOW I SHOULDN'T HAVE BUT IM SO LAZY, AND IT WORKED
 // IF I EVER HAVE TO CHANGE THIS FUNCTION I MIGHT SOB.
 // PLEASE GOD LET IT BE OK.
+// IT DID NOT WORK, AI IS USELESS PLEASE NEVER USE IT AGAIN.
+
 
 let lastFloorCounter = -1; // math.floor value
 let lastBpsValue = -1; //should be the same as floor? but also ai so idk.
@@ -173,15 +227,15 @@ function tick(timestamp) {
     // This avoids slow getElementsByClassName calls every single frame!
     if (!upgrade._cachedElements) {
       upgrade._cachedElements = {
-        name: upgrade.getElementsByClassName("upgrade-name")[0].innerText,
-        amountText: upgrade.getElementsByClassName("amount-purchased")[0].innerText,
-        costText: upgrade.getElementsByClassName("upgrade-cost")[0].innerText
+        name: upgrade.getElementsByClassName("upgrade-name")[0],
+        amountText: upgrade.getElementsByClassName("amount-purchased")[0],
+        costText: upgrade.getElementsByClassName("upgrade-cost")[0]
       };
     }
     
     const cache = upgrade._cachedElements;
     const currentOwned = Number(cache.amountText.innerText);
-    const upgradeTo = getUpgrade(cache.name);
+    const upgradeTo = getUpgrade(cache.name.innerText);
     
     if (!upgradeTo) return;
 
@@ -190,15 +244,17 @@ function tick(timestamp) {
     const multiplier = upgradeTo.multiplier;
     const n = purchaseAmount;
     const nextSingleCost = baseCost * Math.pow(multiplier, currentOwned);
+    //console.log(typeof(currentOwned)) CULPRIT!!!
     const totalCost = Math.ceil(nextSingleCost * ((1 - Math.pow(multiplier, n)) / (1 - multiplier)));
-
     // ONLY write the text if the cost is different (saves rendering cycles)
-    if (cache.costText.innerText !== String(totalCost)) {
+    if (Number(cache.costText.innerText) !== totalCost) {
       cache.costText.innerText = totalCost;
     }
-    
+    //console.log(typeof(currentFloorCounter));
     // Toggle classList using a boolean condition (avoids slow if/else logic)
     const isUnpurchasable = totalCost > currentFloorCounter;
+    //console.log({isUnpurchasable, totalCost, currentFloorCounter});
+    //console.log(isUnpurchasable)
     upgrade.classList.toggle('unpurchasable', isUnpurchasable);
   });
   requestAnimationFrame(tick);
@@ -213,7 +269,7 @@ function tick(timestamp) {
     }else{notificationGenerator('autosaving...');};
     //console.log("autosaving...");
     let saveInfo = [];
-    let fullPurchases = Array.from(upgrades).map(upgrade => {
+    let upgradesPurchased = Array.from(upgrades).map(upgrade => {
       return {
           // Get the specific text from child elements
           amount: upgrade.querySelector(".amount-purchased").innerText.trim(),
@@ -224,12 +280,14 @@ function tick(timestamp) {
     saveInfo = 
       {
         bps: bps,
-        fullPurchases: fullPurchases,
+        upgradesPurchased: upgradesPurchased,
         lifetimeTotal: lifetimeTotal,
-        fractionalCounter: fractionalCounter
+        fractionalCounter: fractionalCounter,
+        advancementsPurchased: advancementsPurchased,
+        achievementsGained: achievementsGained
       }
     localStorage.setItem("saveData", JSON.stringify(saveInfo));
-    console.log((fullPurchases)); 
+    console.log((saveInfo)); 
 }
   function loadSave(){
     let i = 0;
@@ -247,7 +305,7 @@ function tick(timestamp) {
     fractionalCounter = saveData.fractionalCounter;
     try {
       upgrades.forEach(upgrade => {
-        if (!saveData.fullPurchases || !saveData.fullPurchases[i]){
+        if (!saveData.upgradesPurchased || !saveData.upgradesPurchased[i]){
           throw new SaveDataMismatchError(`Missing save data for upgrade index ${i}`);
           return;
         }
@@ -255,9 +313,9 @@ function tick(timestamp) {
         const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
         const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
         const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
-        amountPurchased.innerText = saveData.fullPurchases[i].amount;
-        upgradeName.innerText = saveData.fullPurchases[i].name;
-        upgradeCost.innerText = saveData.fullPurchases[i].cost * purchaseAmount;
+        amountPurchased.innerText = saveData.upgradesPurchased[i].amount;
+        upgradeName.innerText = saveData.upgradesPurchased[i].name;
+        upgradeCost.innerText = saveData.upgradesPurchased[i].cost * purchaseAmount;
   
         i++;
   
@@ -393,9 +451,6 @@ function tick(timestamp) {
 
 
 upgrades.forEach(upgrade => {
-	const popup = document.getElementById("infoPopup");
-  const popupDescription = document.getElementById("popup-description");
-  const popupDetails = document.getElementById('popup-details');
 	const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
 	const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
 	const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0];
@@ -426,6 +481,8 @@ upgrades.forEach(upgrade => {
 	}
 	upgrade.onmouseout = function() {
 		popup.style.display = "none";
+    popupDescription.innerText = "";
+    popupTitle.innerText = "";
 	}
 	upgrade.addEventListener('mousemove', (event) => {
     // Use clientX and clientY for coordinates relative to the browser window

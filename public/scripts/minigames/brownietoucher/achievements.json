@@ -1,14 +1,26 @@
 [
     {
         "name": "getting started",
-        "description": ""
+        "description": "All great things begin with a single step.",
+        "condition": "Touch the brownie for the first time."
     },
     {
         "name": "First purchase",
-        "description": ""
+        "description": "Congrats on promoting capitalism.",
+        "condition": "Buy something for the first time."
     },
     {
         "name": "lavender",
+        "description": "That's so lovely.",
+        "condition": "Have two moms."
+    },
+    {
+        "name": "",
+        "description": "",
+        "condition": ""
+    },
+    {
+        "name": "",
         "description": "",
         "condition": ""
     }

@@ -3,7 +3,8 @@
         "name": "'Paid Labor'",
         "description": "2x extra hand value",
         "cost": 10000,
-        "icon": "./scripts/minigames/brownietoucher/images/advancements/paid_labor.webp"
+        "icon": "./scripts/minigames/brownietoucher/images/advancements/paid_labor.webp",
+        "color": "white"
     },
     {
 
