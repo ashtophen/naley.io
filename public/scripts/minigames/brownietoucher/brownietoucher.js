@@ -23,12 +23,51 @@ const popupTitle = document.getElementById('popup-title');
 // OOOO HERES THAT GLOBAL TRACKING YOU WANTED SO BAD YOU F***ING F*****
 let advancementsPurchased = [];
 let achievementsGained = [];
-
+let upgradesPurchased = [];
 //oooo ahhh
 //tick variables
 let bps = 0; //brownies per second (NOT INCLUDING CLICKS)
 let lastTimestamp = 0; // used to set as timestamp
 
+const unlockedAdvList = document.getElementById("unlocked-advancements");
+const unlockedStructList = document.getElementById("unlocked-structures");
+const unlockedAchieveList = document.getElementById("unlocked-achievements");
+
+
+/**
+ * 
+ * @param {string} item - name of unlocked achievement, advancement, or upgrade
+ * @param {array} list - list it belongs in ex. (upgradesPurchased)
+ */
+function updateUnlocks(item, list){
+  let adv = document.createElement("div");
+  adv.classList.add('advancement');
+    if (list == advancementsPurchased){
+    list.push(item);
+    adv.style.backgroundColor = "white";
+    adv.id = item || "oh_no";
+   [...unlockedAdvList.children].forEach(adv => {
+    if (adv.dataset.name === item){
+      adv.style.backgroundImage = `url(${advancements.find(advancement => advancement.name === `${item}`).icon || "./images/oh_no.png"})`;
+      adv.onmouseover = function() {
+        popup.style.display = "block";
+        popupDescription.innerText = `${adv.dataset.description || "whoopsie, I failed to load that"}`;
+        popupTitle.innerText = `${adv.dataset.name || "oh_no"}`;
+    
+      }
+      adv.onmouseout = function() {
+        popup.style.display = "none";
+        popupDescription.innerText = "";
+        popupTitle.innerText = "";
+      }
+      adv.addEventListener('mousemove', (event) => {
+        popupDetails.innerHTML = ``;
+        popup.style.top = `${event.clientY - 60}px`;
+        popup.style.left = `${event.clientX}`;
+    });
+    }});
+  }
+}
 
 //ts is so f*cking stupid man. You should have just made it a module.
 async function loadAllJson(){
@@ -42,7 +81,7 @@ async function loadAllJson(){
     advancement.onclick = function() {
       if (fractionalCounter >= Number(advancementData.cost)){
         subtractBrownies(Number(advancementData.cost));
-        advancementsPurchased.push(advancementData.name);
+        updateUnlocks(advancementData.name, advancementsPurchased);
         advancement.remove();
       }
       
@@ -75,6 +114,15 @@ function propagateGameData(){
     icon.style.backgroundColor = "white";
     advancementList.appendChild(icon);
     icon.id = advancement.name || "oh_no";
+    let bob = document.createElement('div');
+    bob.classList.add('advancement');
+    bob.style.backgroundColor = "white";
+
+    bob.style.backgroundImage = `url(./scripts/minigames/brownietoucher/images/mono-question-mark.svg)`;
+    unlockedAdvList.appendChild(bob);
+    bob.dataset.name = advancement.name;
+    bob.dataset.description = advancement.description;
+
   });
 }
 
@@ -466,6 +514,7 @@ upgrades.forEach(upgrade => {
 	upgrade.onclick = function() {
 		if (fractionalCounter >= Number(upgradeCost.innerText)){
 			subtractBrownies(Number(upgradeCost.innerText));
+      if (!upgradesPurchased.includes(upgradeName.innerText)){ upgradesPurchased.push(upgradeName.innerText)};
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){
 				bps += (getUpgrade(upgradeName.innerText).baseAdd * purchaseAmount);
