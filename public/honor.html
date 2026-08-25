@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 
 <head>
+    <style>
+        .emissive-text {
+  font-size: 64px;
+  color: #ffffff;
+  /*font-family: ;*/
+  text-transform: uppercase;
+  /* Stacking multiple text shadows creates the volumetric light emission */
+  text-shadow: 
+    0 0 5px #fff, 
+    0 0 10px #ffde22, 
+    0 0 20px #b201f8, 
+    0 0 40px #cf00e6, 
+    0 0 80px #0073e6;
+}
+    </style>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<br>
-<h1 style="font-size: 64px;"> HALL OF HONOR </h1>
-<br>
+<body style="overflow:hidden;">
+<div style="background: radial-gradient(ellipse, rgb(0,0,0), rgb(73, 8, 108)); height: fit-content; padding: 8px;">
+    <h1 style="font-size: 100px;" class="emissive-text"> HALL OF HONOR </h1>
+</div>
+
 <hr>
-<br>
-<h2 style="font-size: 48px;"> For Service In The Brain Storm </h2>
-<br>
+<div style="padding: 16px; background: radial-gradient( rgb(0,0,0), rgb(30, 104, 178));">
+<h2 style="font-size: 48px; text-shadow: 0 0 5px #000000;"> For Service In The Brain Storm </h2>
+</div>
 <hr>
 
 <p> Kaden </p>
@@ -18,12 +34,14 @@
 
 <br>
 <hr>
-<br>
-<h2 style="font-size: 48px;"> For Listening To Nonsense <h2>
-<br>
+<div style="padding:16px; background: radial-gradient(ellipse, rgb(0,0,0), #99840f)">
+    <h2 style="font-size: 48px; text-shadow: 0 0 5px #000000;"> For Listening To My Nonsense <h2>
+</div>
 <hr>
 <p> I did't explicitly get permission to add their names, but it's my gang </p>
-<footer>
-<a class="button" href="index.html">Home </a>
+<footer style=" position: absolute; bottom:0; width: 100vw; height: fit-content;  background-color: rgb(33, 33, 48); margin-bottom: 8px;">
+    <div class="flexcontainer-row"></div>
+        <a class="button" href="index.html">Home </a>
+    </div>
 </footer>
 </body>
