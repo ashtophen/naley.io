@@ -5,7 +5,8 @@
       "description": "Your mom's old oven. Nothing too fancy, but it always makes the best brownies, so long as you know when to turn the pan and which rack to put it on.",
       "baseCost": 100,
       "baseAdd": 5,
-      "multiplier": 1.1499
+      "multiplier": 1.1499,
+      "image": "./scripts/minigames/brownietoucher/images/upgrades/oven.jpg"
         
     },
     {
@@ -13,34 +14,39 @@
       "description": "Who better to make moms brownies than mom herself? Not sure where the rest of them came from, but I'm not complaining. Love you mom <3",
       "baseCost": 1000,
       "baseAdd": 25,
-      "multiplier": 1.156
+      "multiplier": 1.156,
+      "image": ""
     },
     {
       "name": "extra hand",
       "description": "Everyone can use an extra hand. A little weird that your buying ONLY the hand instead of just asking for help, but who am I to judge?",
       "baseCost": 10,
       "baseAdd": 1,
-      "multiplier": 1.15
+      "multiplier": 1.15,
+      "image": "./scripts/minigames/brownietoucher/images/upgrades/"
     },
     {
       "name": "dad",
       "description": "While we're getting family involved, now might be a good time to admit my dad was always the better baker. Love you dad!",
       "baseCost": 10000,
       "baseAdd": 270,
-      "multiplier": 1.148
+      "multiplier": 1.148,
+      "image": ""
     },
     {
       "name":  "God",
       "description": "That's right, capital G God has descended from the heavens, drawn by your simply divine brownies.",
       "baseCost": 99999999999999999999999999999999999,
       "baseAdd": 99999999999999,
-      "multiplier": 9999999999999999999999999999999999999999999999
+      "multiplier": 9999999999999999999999999999999999999999999999,
+      "image": ""
     },
     {
       "name": "???",
       "description":  "???",
-      "baseCost": null,
-      "baseAdd": null,
-      "multiplier": null
+      "baseCost": "???",
+      "baseAdd": "0",
+      "multiplier": "???",
+      "image": "./images/oh_no.png"
     }
         ]

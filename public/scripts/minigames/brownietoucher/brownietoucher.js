@@ -33,6 +33,7 @@ const unlockedAdvList = document.getElementById("unlocked-advancements");
 const unlockedStructList = document.getElementById("unlocked-structures");
 const unlockedAchieveList = document.getElementById("unlocked-achievements");
 
+const lockedImgPath = './scripts/minigames/brownietoucher/images/mono-question-mark.svg';
 
 /**
  * 
@@ -40,14 +41,24 @@ const unlockedAchieveList = document.getElementById("unlocked-achievements");
  * @param {array} list - list it belongs in ex. (upgradesPurchased)
  */
 function updateUnlocks(item, list){
-  let adv = document.createElement("div");
-  adv.classList.add('advancement');
+  //let adv = document.createElement("div");
+  //adv.classList.add('advancement');
     if (list == advancementsPurchased){
     list.push(item);
-    adv.style.backgroundColor = "white";
-    adv.id = item || "oh_no";
-   [...unlockedAdvList.children].forEach(adv => {
+    //adv.style.backgroundColor = "white";
+    //adv.dataset.name = item || "oh_no";
+    //adv.dataset.description = "ow";
+   [...unlockedAdvList.children].forEach((adv, i) => {
+    //this check is absolutely disgusting. You disgust me
+    //for the sake of any who want to change this, we are checking
+    //the indexes against each other to see if they should be the same
+    //achievement. FIND A BETTER WAY
+    advancementsPurchased.forEach((advance, index) => {
+      if (i === index){ 
+        adv.dataset.name = advance;}
+    });
     if (adv.dataset.name === item){
+      //console.log("pow");
       adv.style.backgroundImage = `url(${advancements.find(advancement => advancement.name === `${item}`).icon || "./images/oh_no.png"})`;
       adv.onmouseover = function() {
         popup.style.display = "block";
@@ -66,7 +77,17 @@ function updateUnlocks(item, list){
         popup.style.left = `${event.clientX}`;
     });
     }});
-  }
+  };
+  if(list == upgradesPurchased){
+    list.push(item);
+    upgradesPurchased.forEach((upgrade, i) => {
+      //console.log(upgrade.name);
+      if(i > unlockedStructList.children.length -1){return;}
+      console.log(getUpgrade(upgrade.name)?.image);
+      [...unlockedStructList.children][i].style.backgroundImage = `url(${getUpgrade(upgrade.name)?.image || "./images/oh_no.png"})`;
+    });}
+
+
 }
 
 //ts is so f*cking stupid man. You should have just made it a module.
@@ -101,29 +122,89 @@ async function loadAllJson(){
       popupDetails.innerHTML = `Costs <p style="color: red; -webkit-text-stroke: 2px black; paint-order: stroke fill">${advancementData?.cost || "oh_no"}</p>`
       popup.style.top = `${event.clientY - 60}px`;
   });
-  })
-}
+  });
+  //fix this stuff \/\/\/\/\/
+  [...unlockedAdvList.children].forEach(adv => {
+      //adv.style.backgroundImage = `url(${advancements.find(advancement => advancement.name === `${item}`).icon || "./images/oh_no.png"})`;
+      adv.onmouseover = function() {
+        popup.style.display = "block";
+        popupDescription.innerText = `${adv.dataset.description || "???"}`;
+        popupTitle.innerText = `${adv.dataset.name || "Locked"}`;
+    
+      }
+      adv.onmouseout = function() {
+        popup.style.display = "none";
+        popupDescription.innerText = "";
+        popupTitle.innerText = "";
+      }
+      adv.addEventListener('mousemove', (event) => {
+        popupDetails.innerHTML = ``;
+        popup.style.top = `${event.clientY - 60}px`;
+        popup.style.left = `${event.clientX}`;
+    });
+    });
 
-loadAllJson();
+    Array.from(unlockedStructList.children).forEach(e => {
+      //console.log(e);
+      e.onmouseover = function() {
+        popup.style.display = "block";
+        popupDescription.innerText = `${e.dataset.description || "whoopsie, I failed to load that"}`;
+        popupTitle.innerText = `${e.dataset.name || "oh_no"}`;
+    
+      }
+      e.onmouseout = function() {
+        popup.style.display = "none";
+        popupDescription.innerText = "";
+        popupTitle.innerText = "";
+      }
+      e.addEventListener('mousemove', (event) => {
+        popupDetails.innerHTML = ``;
+        popup.style.top = `${event.clientY - 60}px`;
+        popup.style.left = `${event.clientX}`;
+    });
+    });
+}
 
 function propagateGameData(){
   advancements.forEach(advancement => {
-    let icon = document.createElement('div');
-    icon.classList.add('advancement');
-    icon.style.backgroundImage = `url(${advancement.icon || "./images/oh_no.png"})`
-    icon.style.backgroundColor = "white";
-    advancementList.appendChild(icon);
-    icon.id = advancement.name || "oh_no";
     let bob = document.createElement('div');
     bob.classList.add('advancement');
     bob.style.backgroundColor = "white";
 
     bob.style.backgroundImage = `url(./scripts/minigames/brownietoucher/images/mono-question-mark.svg)`;
     unlockedAdvList.appendChild(bob);
-    bob.dataset.name = advancement.name;
-    bob.dataset.description = advancement.description;
+
+    if (!JSON.parse(localStorage.getItem("saveData"))?.advancementsPurchased.includes(advancement.name)){
+    let icon = document.createElement('div');
+    icon.classList.add('advancement');
+    icon.style.backgroundImage = `url(${advancement.icon || "./images/oh_no.png"})`;
+    icon.style.backgroundColor = "white";
+    advancementList.appendChild(icon);
+    icon.id = advancement.name || "oh_no";
+    } else {
+      //console.log("we made it");
+      bob.style.backgroundImage = `url(${advancement.icon || "./images/oh_no.png"})`;
+      bob.dataset.name = advancement.name;
+      bob.dataset.description = advancement.description;
+    }
 
   });
+  upgrades.forEach(upgrade => {
+    const upgradeName = upgrade.getElementsByClassName("upgrade-name")[0];
+    let dan = document.createElement('div');
+    dan.classList.add('advancement');
+    dan.style.backgroundColor = "white";
+    dan.style.backgroundImage = `url(${lockedImgPath || "./images/oh_no.png"})`;
+    dan.dataset.name = upgradeName.innerText || "???";
+    dan.dataset.description = `${getUpgrade(upgradeName.innerText).description}`;
+    unlockedStructList.appendChild(dan);
+  });
+  // ADD LOOP THAT WILL LOAD UNLOCKED STRUCTURES AND ACHIEVEMENTS UPON LOAD
+  //COOL THANKS
+  //COOK HERE
+  //Cooked in the loadSave function
+  //cooking here is stupid. stop cooking here.
+  //PLEASE STOP ADDING JUNK TO THIS FUNCTION
 }
 
 
@@ -286,6 +367,7 @@ function tick(timestamp) {
     const upgradeTo = getUpgrade(cache.name.innerText);
     
     if (!upgradeTo) return;
+    if (upgradeTo.name === "???") return;
 
     // Fast math
     const baseCost = upgradeTo.baseCost;
@@ -351,6 +433,9 @@ function tick(timestamp) {
     bps = saveData.bps;
     lifetimeTotal = saveData.lifetimeTotal;
     fractionalCounter = saveData.fractionalCounter;
+    advancementsPurchased = saveData.advancementsPurchased;
+    achievementsGained = saveData.achievementsGained;
+    upgradesPurchased = saveData.upgradesPurchased;
     try {
       upgrades.forEach(upgrade => {
         if (!saveData.upgradesPurchased || !saveData.upgradesPurchased[i]){
@@ -362,7 +447,11 @@ function tick(timestamp) {
         const amountPurchased = upgrade.getElementsByClassName("amount-purchased")[0];
         const upgradeCost = upgrade.getElementsByClassName("upgrade-cost")[0]; 
         amountPurchased.innerText = saveData.upgradesPurchased[i].amount;
-        upgradeName.innerText = saveData.upgradesPurchased[i].name;
+        //console.log(Number(saveData.upgradesPurchased[i].amount));
+        if (Number(saveData.upgradesPurchased[i].amount) > 0){
+          //console.log("It's me");
+        upgradeName.innerText = saveData.upgradesPurchased[i].name; }
+        //console.log(upgradeCost.innerText = saveData.upgradesPurchased[i].cost * purchaseAmount);
         upgradeCost.innerText = saveData.upgradesPurchased[i].cost * purchaseAmount;
   
         i++;
@@ -493,7 +582,8 @@ function tick(timestamp) {
     if (JSON.parse(localStorage.getItem("saveData")) !== null){
       console.log("wow");
       loadSave();
-    }
+      loadAllJson();
+    } else {loadAllJson();}
     requestAnimationFrame(tick);
   }
 
@@ -507,6 +597,7 @@ upgrades.forEach(upgrade => {
 		hiddenText = upgradeName.innerText;
 		upgradeName.innerText = "???";}
 	setInterval(() => {
+    //console.log(upgradeCost.innerHTML);
 	if (lifetimeTotal < (Number(upgradeCost.innerText) / 5)){
 		// console.log(hiddenText);
 	} else {upgradeName.innerText = hiddenText;}
@@ -514,7 +605,7 @@ upgrades.forEach(upgrade => {
 	upgrade.onclick = function() {
 		if (fractionalCounter >= Number(upgradeCost.innerText)){
 			subtractBrownies(Number(upgradeCost.innerText));
-      if (!upgradesPurchased.includes(upgradeName.innerText)){ upgradesPurchased.push(upgradeName.innerText)};
+      if (!upgradesPurchased.includes(upgradeName.innerText)){ updateUnlocks(upgradeName.innerText, upgradesPurchased)};
 			amountPurchased.innerText = Number(amountPurchased.innerText) + purchaseAmount;
 			if(Number(amountPurchased.innerText > 0)){
 				bps += (getUpgrade(upgradeName.innerText).baseAdd * purchaseAmount);
