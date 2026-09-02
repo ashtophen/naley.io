@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        input{
+            text-align: center;
+        }
+    </style>
+    <title>Game Login</title>
+</head>
+
+<body>
+    <header></header>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 80vh">
+    <h1>Login To Play</h1>
+    <div style="background-color: #aaf; display: flex; justify-content: center; align-items: center; width: fit-content; padding: 8px; justify-self: center; border-bottom: 2px solid #bbc; border-right: 2px solid #bbc">
+        <form>
+            <label class="outline" for="usernameBox">Name</label><br>
+            <input type="text" placeholder="bob" id="usernameBox"><br>
+            <input class="button" type="button" value="random name" onclick="randName()"><br>
+            <label class="outline" for="roomCodeBox">Room Code</label><br>
+            <input type="number" placeholder="6969" id="roomCodeBox"><br>
+            <input class="button" type="submit" value="enter">
+        
+        </form>
+    </div>
+    <h2 style="align-self: center; justify-self: center;">OR</h2>
+    <div>
+        <a class="button" href="./host2.html">Host A Game</a>
+    </div>
+</div>
+
+
+    <footer class="footer">
+        <a class="button" href="index.html">Home</a>
+    </footer>
+    <script>
+        const adjectives = ["Creamy", "Long", "Throbbing", "Squirting", "Burning","Swift"]
+        const nouns = ["Building", "Cylinder", "Door", "Traffic-cone", "Ziploc"]
+        usernameBox = document.getElementById("usernameBox")
+        function randName() {
+            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const noun = nouns[Math.floor(Math.random() * nouns.length)];
+            const num = Math.floor(Math.random() * 900) + 100;
+
+            usernameBox.value = `${adj}${noun}${num}`;
+        }
+    </script>
+
+</body>
+
